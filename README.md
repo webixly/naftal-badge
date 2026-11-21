@@ -5,7 +5,7 @@
 <p align="center">Générateur de cartes professionnelles (badges CR80) pour le District Commercialisation NAFTAL.<br>
 Un seul fichier HTML, sans serveur, sans installation, fonctionne hors ligne.</p>
 
-<p align="center"><img src="docs/apercu-recto.png" alt="Aperçu de l'application" width="900"></p>
+<p align="center"><img src="docs/apercu-app.png" alt="Aperçu de l'application" width="900"></p>
 
 ## Fonctionnalités
 
