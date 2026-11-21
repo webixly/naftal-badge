@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Aymen">
+<title>NAFTAL Badges</title>
+<link rel="icon" type="image/png" sizes="256x256" href="data:image/png;base64,__ICON__">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&family=Roboto:wght@400;500;700;900&family=Roboto+Condensed:wght@700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy: #14294D;
+  --navy-deep: #0C1A33;
+  --navy-mat: #10213F;
+  --gold: #F7D117;
+  --gold-hover: #E9C40A;
+  --gold-tint: #FFF7CC;
+  --page: #E9ECF1;
+  --surface: #FFFFFF;
+  --surface-2: #F5F7FA;
+  --line: #D6DBE3;
+  --line-strong: #B9C1CE;
+  --ink: #142033;
+  --steel: #5E6A80;
+  --steel-2: #8A94A7;
+  --red: #B42318;
+  --red-tint: #FEF1F0;
+  --amber: #A15C07;
+  --amber-tint: #FFF6E5;
+  --green: #08703F;
+  --green-tint: #EAF8F0;
+  --ring: 0 0 0 3px rgba(247, 209, 23, .55);
+  --font-ui: 'Barlow', 'Segoe UI', system-ui, sans-serif;
+  --font-display: 'Barlow Condensed', 'Arial Narrow', 'Segoe UI', sans-serif;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--page);
+  color: var(--ink);
+  font: 15px/1.45 var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: none; box-shadow: var(--ring); }
+svg.i { width: 18px; height: 18px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+[hidden] { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ───────── Top bar ───────── */
+.topbar {
+  height: 60px;
+  background: var(--navy);
+  border-bottom: 4px solid var(--gold);
+  display: flex; align-items: center; gap: 16px;
+  padding: 0 20px;
+  color: #fff;
+  position: sticky; top: 0; z-index: 50;
+}
+.brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.brand img { height: 34px; width: auto; border-radius: 2px; display: block; }
+.brand .app-icon { width: 67px; height: 40px; border-radius: 8px; box-shadow: 0 0 0 1px rgba(255,255,255,.18), 0 2px 6px rgba(0,0,0,.35); }
+.brand-name { font: 700 22px/1 var(--font-display); letter-spacing: .2px; white-space: nowrap; }
+.brand-sub { font-size: 13.5px; color: #AFBBD2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-left: 12px; border-left: 1px solid rgba(255,255,255,.2); }
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.storage { font-size: 13px; color: #CFD8E8; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.storage.warn { color: var(--gold); }
+.top-btn {
+  height: 36px; padding: 0 12px; border-radius: 6px;
+  border: 1px solid rgba(255,255,255,.22); background: transparent; color: #fff;
+  display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px;
+}
+.top-btn:hover { background: rgba(255,255,255,.08); }
+
+/* ───────── Workspace grid ───────── */
+.app {
+  display: grid;
+  grid-template-columns: 330px minmax(0, 1fr) 390px;
+  grid-template-areas: "reg stage form";
+  height: calc(100vh - 64px);
+}
+.col { min-height: 0; overflow: auto; }
+.reg { grid-area: reg; background: var(--surface); border-right: 1px solid var(--line); display: flex; flex-direction: column; overflow: hidden; }
+.stage-col { grid-area: stage; }
+.form-col { grid-area: form; background: var(--surface); border-left: 1px solid var(--line); }
+
+/* ───────── Registry ───────── */
+.reg-head { padding: 16px 16px 12px; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; }
+.reg-title { display: flex; align-items: baseline; justify-content: space-between; }
+.reg-title h2 { font: 700 21px/1.1 var(--font-display); color: var(--navy); }
+.reg-title span { font-size: 13px; color: var(--steel); font-variant-numeric: tabular-nums; }
+.search { position: relative; }
+.search svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--steel-2); width: 16px; height: 16px; }
+.search input[type="text"] { padding-left: 36px; }
+.filters { display: flex; gap: 4px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 7px; padding: 3px; }
+.filters button {
+  flex: 1; height: 28px; border: 0; background: transparent; border-radius: 5px;
+  font-size: 13px; font-weight: 600; color: var(--steel); white-space: nowrap; padding: 0 4px;
+}
+.filters button[aria-pressed="true"] { background: var(--surface); color: var(--navy); box-shadow: 0 1px 2px rgba(20,41,77,.15); }
+.selbar { display: none; align-items: center; gap: 8px; padding: 8px 16px; background: var(--gold-tint); border-bottom: 1px solid #EEDC7A; font-size: 13.5px; font-weight: 600; }
+.selbar.show { display: flex; }
+.selbar .grow { flex: 1; }
+.selbar button { height: 30px; padding: 0 10px; border-radius: 5px; border: 1px solid #D9C459; background: #fff; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+.selbar button.danger { color: var(--red); border-color: #F1B3AC; }
+.list-head { display: flex; align-items: center; gap: 10px; padding: 8px 16px; font-size: 12.5px; color: var(--steel); border-bottom: 1px solid var(--line); }
+.list { flex: 1; overflow-y: auto; }
+.row {
+  display: grid; grid-template-columns: 20px 34px minmax(0,1fr) auto; align-items: center; gap: 10px;
+  padding: 9px 16px; border-bottom: 1px solid #EDF0F4; border-left: 3px solid transparent;
+  cursor: pointer;
+}
+.row:hover { background: var(--surface-2); }
+.row.active { background: var(--gold-tint); border-left-color: var(--gold); }
+.row img, .row .ph { width: 34px; height: 40px; border-radius: 3px; object-fit: cover; background: #E3E7EE; border: 1px solid var(--line); display: block; }
+.row-name { font-weight: 600; font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row-sub { font-size: 12.5px; color: var(--steel); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row-end { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+.row-mat { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.chip { font-size: 11.5px; font-weight: 600; padding: 1px 7px; border-radius: 999px; white-space: nowrap; }
+.chip.ok { background: var(--green-tint); color: var(--green); }
+.chip.soon { background: var(--amber-tint); color: var(--amber); }
+.chip.exp { background: var(--red-tint); color: var(--red); }
+.chip.none { background: var(--surface-2); color: var(--steel); }
+input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--navy); cursor: pointer; }
+.empty { padding: 40px 24px; text-align: center; color: var(--steel); font-size: 14px; }
+.empty strong { display: block; color: var(--ink); font-size: 15px; margin-bottom: 4px; }
+.reg-foot { border-top: 1px solid var(--line); padding: 10px 16px; display: flex; gap: 8px; background: var(--surface-2); }
+
+/* ───────── Stage (cutting mat) ───────── */
+.stage-col { display: flex; flex-direction: column; background: var(--navy-mat); color: #DCE3F0; }
+.stage {
+  flex: 1; min-height: 380px; position: relative; overflow: hidden;
+  display: grid; place-items: center;
+  background:
+    linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px) 0 0 / 100% 10mm,
+    linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px) 0 0 / 10mm 100%,
+    linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px) 0 0 / 100% 2mm,
+    linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px) 0 0 / 2mm 100%,
+    var(--navy-mat);
+}
+.frame { position: relative; }
+.frame-inner { transform-origin: 0 0; position: absolute; left: 0; top: 0; }
+.dim { position: absolute; color: #9FB0CC; font: 600 13px/1 var(--font-display); letter-spacing: .3px; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.dim::before, .dim::after { content: ""; background: #5B6E91; flex: 1; }
+.dim-h { left: 0; right: 0; top: -30px; height: 12px; }
+.dim-h::before, .dim-h::after { height: 1px; }
+.dim-h { border-left: 1px solid #5B6E91; border-right: 1px solid #5B6E91; padding: 0 0; }
+.dim-v { top: 0; bottom: 0; left: -30px; width: 12px; flex-direction: column; border-top: 1px solid #5B6E91; border-bottom: 1px solid #5B6E91; }
+.dim-v::before, .dim-v::after { width: 1px; }
+.dim-v span { writing-mode: vertical-rl; transform: rotate(180deg); }
+.stage-bar {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 12px 20px; border-top: 1px solid rgba(255,255,255,.08); background: var(--navy-deep);
+}
+.stage-bar .status { font-size: 13.5px; color: #AFBBD2; flex: 1; min-width: 160px; }
+.stage-bar .status b { color: #fff; font-weight: 600; }
+.seg { display: inline-flex; border: 1px solid rgba(255,255,255,.18); border-radius: 6px; overflow: hidden; }
+.seg button { height: 32px; padding: 0 12px; background: transparent; border: 0; color: #CFD8E8; font-size: 13px; font-weight: 600; }
+.seg button + button { border-left: 1px solid rgba(255,255,255,.18); }
+.seg button[aria-pressed="true"] { background: rgba(255,255,255,.12); color: #fff; }
+
+/* ───────── Form ───────── */
+.form { padding: 18px 20px 24px; }
+.form-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
+.form-top h2 { font: 700 21px/1.1 var(--font-display); color: var(--navy); }
+.form-mode { font-size: 13px; color: var(--steel); white-space: nowrap; }
+.form-mode.dirty::after { content: " · modifié"; color: var(--amber); font-weight: 600; }
+fieldset { border: 0; padding: 14px 0 4px; border-top: 1px solid var(--line); margin-top: 14px; }
+fieldset:first-of-type { border-top: 0; margin-top: 4px; }
+legend { font: 600 15.5px/1 var(--font-display); color: var(--steel); letter-spacing: .2px; padding: 0; margin-bottom: 10px; float: left; width: 100%; }
+legend + * { clear: both; }
+.f { margin-bottom: 12px; min-width: 0; }
+.f label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+.f label .req { color: var(--red); }
+.f .help { font-size: 12.5px; color: var(--steel); margin-top: 4px; }
+.f .err { font-size: 12.5px; color: var(--red); margin-top: 4px; display: none; }
+.f.invalid .err { display: block; }
+.f.invalid input { border-color: var(--red); }
+.f .trunc { font-size: 12.5px; color: var(--amber); margin-top: 4px; font-weight: 600; display: none; }
+.f.is-trunc .trunc { display: block; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+input[type="text"], input[type="date"], input[type="number"], select {
+  width: 100%; height: 40px; padding: 0 11px;
+  border: 1px solid var(--line-strong); border-radius: 6px; background: var(--surface);
+  font-size: 15px; transition: border-color .12s, box-shadow .12s;
+}
+textarea.ta { width: 100%; padding: 8px 11px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--surface); font: 13.5px/1.45 ui-monospace, Consolas, monospace; resize: vertical; text-transform: uppercase; }
+textarea.ta.keep { text-transform: none; }
+textarea.ta:focus { outline: none; border-color: var(--navy); box-shadow: var(--ring); }
+input:hover, select:hover { border-color: #97A3B6; }
+input:focus, select:focus { outline: none; border-color: var(--navy); box-shadow: var(--ring); }
+input[readonly] { background: var(--surface-2); color: var(--steel); font-weight: 600; font-variant-numeric: tabular-nums; }
+input::placeholder { color: #A2ACBD; }
+select { appearance: none; padding-right: 34px; background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%235E6A80' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E") no-repeat right 11px center; }
+.quick { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+.quick button { height: 26px; padding: 0 9px; border-radius: 5px; border: 1px solid var(--line); background: var(--surface-2); font-size: 12.5px; font-weight: 600; color: var(--steel); }
+.quick button:hover { border-color: var(--line-strong); color: var(--ink); }
+.date-warn { font-size: 12.5px; margin-top: 4px; font-weight: 600; display: none; }
+.date-warn.exp { display: block; color: var(--red); }
+.date-warn.soon { display: block; color: var(--amber); }
+
+.drop {
+  display: grid; grid-template-columns: 74px 1fr; gap: 14px; align-items: center;
+  border: 1.5px dashed var(--line-strong); border-radius: 8px; padding: 10px 12px; background: var(--surface-2);
+  position: relative; transition: border-color .12s, background .12s;
+}
+.drop.over { border-color: var(--navy); background: #EEF2F9; }
+.drop-thumb { width: 74px; height: 85px; border-radius: 4px; border: 1px solid var(--line); background: #E4E8EF; display: grid; place-items: center; overflow: hidden; color: var(--steel-2); }
+.drop-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.drop-text { font-size: 13.5px; color: var(--steel); }
+.drop-text strong { display: block; color: var(--ink); font-weight: 600; font-size: 14.5px; }
+.drop-actions { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.mini { height: 30px; padding: 0 10px; border-radius: 5px; border: 1px solid var(--line-strong); background: var(--surface); font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+.mini:hover { background: var(--surface-2); }
+.mini.danger { color: var(--red); border-color: #F1B3AC; }
+
+.actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 18px; position: sticky; bottom: 0; background: var(--surface); padding: 12px 0 2px; border-top: 1px solid var(--line); }
+.btn {
+  height: 44px; padding: 0 14px; border-radius: 7px; border: 1px solid transparent;
+  font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap;
+  transition: background .12s;
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--navy); color: #fff; }
+.btn-primary:hover { background: #1C376A; }
+.btn-gold { background: var(--gold); color: var(--navy); }
+.btn-gold:hover { background: var(--gold-hover); }
+.btn-ghost { background: var(--surface); border-color: var(--line-strong); color: var(--ink); }
+.btn-ghost:hover { background: var(--surface-2); }
+.btn-danger { background: var(--red); color: #fff; }
+.btn-danger:hover { background: #9A1D14; }
+.btn-sm { height: 34px; font-size: 13.5px; padding: 0 12px; }
+.actions .wide { grid-column: 1 / -1; }
+.kbd { font-size: 12px; color: var(--steel-2); text-align: center; margin-top: 8px; }
+.credit { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-top: 1px solid var(--line); background: var(--surface); font-size: 12.5px; color: var(--steel); flex-shrink: 0; }
+.credit-ph { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--gold); background: #E4E8EF; padding: 0; overflow: hidden; display: grid; place-items: center; color: var(--steel-2); flex-shrink: 0; }
+.credit-ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.credit-text { display: flex; flex-direction: column; line-height: 1.1; }
+.credit strong { font: 700 22px/1.05 'Dancing Script', 'Segoe Script', 'Brush Script MT', cursive; color: var(--navy); }
+
+/* ───────── Dialogs ───────── */
+dialog {
+  border: 0; border-radius: 10px; padding: 0; width: min(520px, calc(100vw - 32px));
+  box-shadow: 0 24px 64px rgba(12,26,51,.35); color: var(--ink); margin: auto;
+}
+dialog::backdrop { background: rgba(12,26,51,.55); }
+.dlg-head { padding: 18px 22px 0; }
+.dlg-head h3 { font: 700 22px/1.15 var(--font-display); color: var(--navy); }
+.dlg-head p { color: var(--steel); font-size: 14px; margin-top: 4px; }
+.dlg-body { padding: 16px 22px; max-height: min(70vh, 640px); overflow: auto; }
+.dlg-foot { padding: 14px 22px 18px; display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid var(--line); }
+.choice { display: grid; grid-template-columns: 22px 1fr; gap: 10px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 8px; margin-bottom: 8px; cursor: pointer; }
+.choice:has(input:checked) { border-color: var(--navy); background: #F2F5FA; }
+.choice input { margin-top: 3px; accent-color: var(--navy); width: 16px; height: 16px; }
+.choice strong { display: block; font-size: 15px; }
+.choice span { font-size: 13.5px; color: var(--steel); }
+.set-group { padding: 4px 0 14px; border-bottom: 1px solid var(--line); margin-bottom: 14px; }
+.set-group:last-child { border-bottom: 0; margin-bottom: 0; }
+.set-group h4 { font: 600 16px/1.2 var(--font-display); color: var(--steel); margin-bottom: 10px; }
+.toggle { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 6px 0; font-size: 14.5px; }
+.toggle input { width: 18px; height: 18px; }
+.logo-row { display: flex; align-items: center; gap: 12px; }
+.logo-row img { height: 42px; border: 1px solid var(--line); border-radius: 3px; }
+.data-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.range-row { display: flex; align-items: center; gap: 10px; }
+.range-row input[type="range"] { flex: 1; accent-color: var(--navy); }
+
+/* ───────── Toast ───────── */
+.toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 12px); z-index: 300;
+  background: var(--navy-deep); color: #fff; border-radius: 8px; padding: 10px 10px 10px 16px;
+  display: flex; align-items: center; gap: 14px; font-size: 14.5px; font-weight: 500;
+  box-shadow: 0 12px 32px rgba(12,26,51,.35); opacity: 0; pointer-events: none;
+  transition: opacity .18s, transform .18s; max-width: calc(100vw - 32px);
+  border-left: 4px solid var(--gold);
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+.toast.err { border-left-color: #F97066; }
+.toast button { background: transparent; border: 1px solid rgba(255,255,255,.3); color: var(--gold); border-radius: 5px; height: 30px; padding: 0 10px; font-weight: 700; font-size: 13.5px; }
+.toast button:empty { display: none; }
+
+/* ═════════ BADGE — CR80 85.6 × 53.98 mm, positions taken from the template ═════════ */
+.card {
+  width: 85.6mm; height: 53.98mm; position: relative; overflow: hidden;
+  background: #fff; border-radius: 3.18mm; color: #111;
+  font-family: 'Roboto', Arial, Helvetica, sans-serif;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+.card::after { content: ""; position: absolute; inset: 0; border-radius: inherit; border: .35mm solid #000; pointer-events: none; z-index: 10; }
+.card.no-border::after { border-color: transparent; }
+.stage .card { box-shadow: 0 1px 1px rgba(0,0,0,.25), 0 10px 30px rgba(0,0,0,.35); }
+.stage .card.no-border::after { border: .1mm solid #C9CED8; }
+/* recto/verso flip (preview only) */
+.flipper { position: relative; transform-style: preserve-3d; transform: perspective(900px) rotateY(0deg); transition: transform .75s cubic-bezier(.45,.05,.2,1); cursor: pointer; }
+.flipper.is-back { transform: perspective(900px) rotateY(180deg); }
+.flipper > .card { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.flipper > .card.back { position: absolute; left: 0; top: 0; transform: rotateY(180deg); }
+.flipper.lift { animation: cardLift .75s cubic-bezier(.45,.05,.2,1); }
+@keyframes cardLift { 50% { scale: 1.06; } }
+@media (prefers-reduced-motion: reduce) { .flipper { transition: none; } .flipper.lift { animation: none; } }
+.c-logo { position: absolute; left: 1.6mm; top: 1.6mm; width: 18.2mm; height: 9.4mm; background: #F7D117; display: grid; place-items: center; overflow: hidden; }
+.c-logo img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.c-district { position: absolute; left: 20.9mm; right: 1.4mm; top: 1.6mm; height: 9.4mm; line-height: 9.4mm; font-family: 'Roboto Condensed', 'Arial Narrow', Arial, sans-serif; font-weight: 700; color: #1B2E56; white-space: nowrap; overflow: hidden; letter-spacing: -.1pt; }
+.c-banner { position: absolute; left: 1.2mm; top: 12.3mm; width: 59.6mm; height: 5.9mm; background: #F7D117; text-align: center; line-height: 5.9mm; font-family: 'Roboto Condensed', 'Arial Narrow', Arial, sans-serif; font-weight: 700; color: #4A4A48; white-space: nowrap; overflow: hidden; padding: 0 1.5mm; }
+.c-photo { position: absolute; left: 61.8mm; top: 12.2mm; width: 22.7mm; height: 26mm; border: .4mm solid #B3B3B3; background: #fff; overflow: hidden; }
+.c-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.c-wm { position: absolute; left: 18mm; top: 19mm; width: 43.6mm; height: 19.7mm; object-fit: contain; pointer-events: none; }
+.c-row { position: absolute; left: 1.5mm; width: 59.4mm; display: flex; align-items: center; white-space: nowrap; }
+.c-row .l { width: 13.6mm; flex-shrink: 0; display: flex; justify-content: space-between; font-weight: 400; color: #111; }
+.c-row .v { margin-left: 1.2mm; flex: 1; min-width: 0; overflow: hidden; font-weight: 700; text-transform: uppercase; color: #0E1A30; }
+.c-row.big { height: 3.8mm; font-size: 10.6pt; }
+.c-row.sm { height: 3.3mm; font-size: 9pt; }
+.c-row.r1 { top: 19.5mm; } .c-row.r2 { top: 22.9mm; }
+.c-row.r3 { top: 27.5mm; } .c-row.r4 { top: 30.6mm; } .c-row.r5 { top: 34.8mm; }
+.c-serial { position: absolute; left: 61.8mm; width: 22.7mm; top: 38.7mm; text-align: center; font-size: 5.6pt; color: #555; font-weight: 500; letter-spacing: .2pt; white-space: nowrap; }
+.c-mat { position: absolute; left: 9.2mm; top: 43mm; height: 4.4mm; line-height: 4.4mm; font-weight: 700; font-size: 12.6pt; color: #000; white-space: nowrap; }
+.c-bar { position: absolute; top: 42.3mm; height: 6.2mm; }
+.c-bar svg { width: 100%; height: 100%; display: block; }
+.c-barnum { position: absolute; top: 49.1mm; height: 3.6mm; line-height: 3.6mm; text-align: center; font-weight: 900; font-size: 9.4pt; color: #000; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.c-siege { position: absolute; right: 0; top: 43.8mm; min-width: 19.8mm; max-width: 34mm; height: 5.6mm; background: #1B2E56; clip-path: polygon(9% 0, 100% 0, 100% 100%, 0 100%); color: #F7D117; font-weight: 900; text-align: right; line-height: 5.6mm; padding: 0 2.4mm 0 2.6mm; white-space: nowrap; overflow: hidden; }
+/* ── Verso (back) ── */
+.card.back { font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; color: #111; }
+.v-title { position: absolute; left: 3mm; right: 3mm; top: 4.6mm; height: 6mm; line-height: 6mm; text-align: center; font-weight: 700; font-size: 16pt; color: #1B2433; white-space: nowrap; overflow: hidden; }
+.v-title span { text-decoration: underline; text-decoration-thickness: .4mm; text-underline-offset: .9mm; }
+.v-msg { position: absolute; left: 2.6mm; right: 2.6mm; top: 11.5mm; bottom: 13.7mm; display: flex; flex-direction: column; justify-content: center; }
+.v-foot { position: absolute; left: 2.6mm; right: 2.6mm; top: 41.6mm; bottom: 2.5mm; display: flex; flex-direction: column; justify-content: center; }
+.v-line { height: 3.8mm; line-height: 3.8mm; text-align: center; white-space: pre; overflow: hidden; font-size: 9.6pt; flex-shrink: 0; }
+.v-msg .v-line { text-transform: uppercase; }
+.v-foot .v-line { height: 3.7mm; line-height: 3.7mm; }
+.v-rule { position: absolute; left: 0; right: 0; top: 41.1mm; height: .3mm; background: #1B2433; }
+
+/* ───────── Print root ───────── */
+#printRoot { position: absolute; left: -20000px; top: 0; }
+.sheet { width: 210mm; height: 297mm; position: relative; background: #fff; overflow: hidden; }
+.sheet .card { position: absolute; }
+.crop { position: absolute; background: #000; }
+.p-cr80 .card { break-after: page; page-break-after: always; border-radius: 0; }
+.p-cr80 .card:last-child { break-after: auto; page-break-after: auto; }
+.p-cr80 .card.round { border-radius: 3.18mm; }
+.sheet { break-after: page; page-break-after: always; }
+.sheet:last-child { break-after: auto; page-break-after: auto; }
+
+@media print {
+  html, body { background: #fff !important; margin: 0 !important; padding: 0 !important; min-height: 0; }
+  body > *:not(#printRoot) { display: none !important; }
+  #printRoot { position: static; left: auto; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+}
+
+/* ───────── Responsive ───────── */
+@media (max-width: 1320px) {
+  /* preview on top, registry below it (own scroll), form on the right (own scroll) — nothing overlaps */
+  .app { grid-template-columns: minmax(0,1fr) 390px; grid-template-rows: auto minmax(0,1fr); grid-template-areas: "stage form" "reg form"; }
+  .reg { border-right: 0; border-top: 1px solid var(--line); }
+  .stage-col { overflow: hidden; }
+  .stage { flex: none; height: clamp(270px, 40vh, 440px); min-height: 0; }
+  .empty { padding: 20px 16px; }
+}
+/* short screens: fall back to normal page scrolling */
+@media (max-width: 1320px) and (max-height: 720px), (max-width: 860px) {
+  .app { height: auto; grid-template-rows: auto auto; }
+  .col { overflow: visible; }
+  .reg { max-height: 560px; }
+}
+@media (max-width: 860px) {
+  .app { grid-template-columns: 1fr; grid-template-areas: "stage" "form" "reg"; }
+  .form-col { border-left: 0; border-top: 1px solid var(--line); }
+  .actions { position: static; }
+  .brand-sub, .storage { display: none; }
+  .stage { min-height: 300px; }
+  .topbar { padding: 0 16px; }
+  .form { padding: 16px; }
+  .reg-head, .row, .list-head, .reg-foot, .selbar { padding-left: 16px; padding-right: 16px; }
+}
+@media (max-width: 420px) {
+  .pair { grid-template-columns: 1fr; gap: 0; }
+  .data-btns { grid-template-columns: 1fr; }
+  .top-btn span { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <img id="appIcon" class="app-icon" alt="" width="67" height="40">
+    <img id="topLogo" alt="NAFTAL">
+    <span class="brand-name">Badges</span>
+    <span class="brand-sub" id="topDistrict">District Commercialisation Alger</span>
+  </div>
+  <div class="topbar-right">
+    <span class="storage" id="storageInfo" title="Données stockées dans ce navigateur"></span>
+    <button class="top-btn" id="btnSettings" type="button" aria-label="Paramètres">
+      <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+      <span>Paramètres</span>
+    </button>
+  </div>
+</header>
+
+<main class="app">
+  <!-- Registry -->
+  <aside class="col reg" aria-label="Registre des badges">
+    <div class="reg-head">
+      <div class="reg-title"><h2>Registre</h2><span id="regCount">0 badge</span></div>
+      <div class="search">
+        <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input type="text" id="search" placeholder="Nom, matricule, structure, n° de série" aria-label="Rechercher un badge" autocomplete="off">
+      </div>
+      <div class="filters" role="group" aria-label="Filtrer par validité">
+        <button type="button" data-filter="all" aria-pressed="true">Tous</button>
+        <button type="button" data-filter="valid" aria-pressed="false">Valides</button>
+        <button type="button" data-filter="soon" aria-pressed="false" title="Expirent dans moins de 30 jours">Bientôt</button>
+        <button type="button" data-filter="expired" aria-pressed="false">Expirés</button>
+      </div>
+    </div>
+    <div class="selbar" id="selbar">
+      <span class="grow" id="selCount">0 sélectionné</span>
+      <button type="button" id="btnSelPrint"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Imprimer</button>
+      <button type="button" class="danger" id="btnSelDelete">Supprimer</button>
+    </div>
+    <div class="list-head">
+      <input type="checkbox" id="selAll" aria-label="Tout sélectionner">
+      <label for="selAll" id="listInfo">Tout sélectionner</label>
+    </div>
+    <div class="list" id="list" role="list"></div>
+    <div class="reg-foot">
+      <button class="btn btn-ghost btn-sm" id="btnImport" type="button" style="flex:1"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Importer</button>
+      <button class="btn btn-ghost btn-sm" id="btnExport" type="button" style="flex:1"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Sauvegarder</button>
+      <input type="file" id="fileImport" accept=".json,.csv,text/csv,application/json" hidden>
+    </div>
+    <div class="credit" id="credit">
+      <span class="credit-ph"><img id="creditPhoto" alt="Aymen"></span>
+      <span class="credit-text"><span>Réalisé par</span><strong id="creditName">Aymen</strong></span>
+    </div>
+  </aside>
+
+  <!-- Stage -->
+  <section class="col stage-col" aria-label="Aperçu du badge">
+    <div class="stage" id="stage">
+      <div class="frame" id="frame">
+        <div class="dim dim-h" aria-hidden="true"><span>85,6 mm</span></div>
+        <div class="dim dim-v" aria-hidden="true"><span>53,98 mm</span></div>
+        <div class="frame-inner" id="frameInner"></div>
+      </div>
+    </div>
+    <div class="stage-bar">
+      <div class="status" id="stageStatus"><b>Nouveau badge</b></div>
+      <div class="seg" role="group" aria-label="Face affichée">
+        <button type="button" data-face="front" aria-pressed="true">Recto</button>
+        <button type="button" data-face="back" aria-pressed="false">Verso</button>
+      </div>
+      <div class="seg" role="group" aria-label="Zoom">
+        <button type="button" data-zoom="fit" aria-pressed="true">Ajusté</button>
+        <button type="button" data-zoom="real" aria-pressed="false">Taille réelle</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Form -->
+  <section class="col form-col" aria-label="Fiche du badge">
+    <form class="form" id="form" novalidate autocomplete="off">
+      <div class="form-top"><h2 id="formTitle">Nouveau badge</h2><span class="form-mode" id="formMode">Brouillon</span></div>
+
+      <fieldset>
+        <legend>Titulaire</legend>
+        <div class="f">
+          <label for="fPhoto">Photo d'identité</label>
+          <div class="drop" id="drop">
+            <div class="drop-thumb" id="dropThumb"><svg class="i" style="width:26px;height:26px" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+            <div>
+              <div class="drop-text" id="dropText"><strong>Ajouter une photo</strong>Déposez une image, collez-la (Ctrl+V) ou parcourez vos fichiers.</div>
+              <div class="drop-actions">
+                <button type="button" class="mini" id="btnPickPhoto">Parcourir</button>
+                <button type="button" class="mini danger" id="btnRemovePhoto" hidden>Retirer</button>
+              </div>
+            </div>
+            <input type="file" id="fPhoto" accept="image/*" hidden>
+          </div>
+        </div>
+        <div class="pair">
+          <div class="f" id="gNom"><label for="fNom">Nom <span class="req" aria-hidden="true">*</span></label><input type="text" id="fNom" placeholder="MANSOURI" required><div class="err">Saisissez le nom.</div></div>
+          <div class="f"><label for="fPrenom">Prénom</label><input type="text" id="fPrenom" placeholder="Yacine"></div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Poste</legend>
+        <div class="f"><label for="fFonction">Fonction</label><input type="text" id="fFonction" placeholder="Ingénieur d'études" list="dlFonction"></div>
+        <div class="f"><label for="fStructure">Structure</label><input type="text" id="fStructure" placeholder="Département Informatique" list="dlStructure"></div>
+        <div class="f"><label for="fAffect">Affectation</label><input type="text" id="fAffect" value="Siège" list="dlAffect"><div class="help">Texte du bandeau bleu en bas à droite.</div></div>
+        <datalist id="dlFonction"></datalist><datalist id="dlStructure"></datalist><datalist id="dlAffect"></datalist>
+      </fieldset>
+
+      <fieldset>
+        <legend>Carte</legend>
+        <div class="f">
+          <label for="fType">Type de carte</label>
+          <select id="fType">
+            <option>Carte Professionnelle</option>
+            <option>Carte Stagiaire</option>
+            <option>Carte Visiteur</option>
+            <option>Carte Prestataire</option>
+          </select>
+        </div>
+        <div class="pair">
+          <div class="f" id="gMat"><label for="fMatricule">Matricule <span class="req" aria-hidden="true">*</span></label><input type="text" id="fMatricule" placeholder="12345" required inputmode="text"><div class="err" id="matErr">Saisissez le matricule.</div></div>
+          <div class="f"><label for="fSerial">N° de série</label><input type="text" id="fSerial" readonly tabindex="-1"></div>
+        </div>
+        <div class="f">
+          <label for="fValide">Valide au</label>
+          <input type="date" id="fValide">
+          <div class="quick">
+            <button type="button" data-valid="6">+6 mois</button>
+            <button type="button" data-valid="12">+1 an</button>
+            <button type="button" data-valid="24">+2 ans</button>
+            <button type="button" data-valid="eoy">31 déc.</button>
+          </div>
+          <div class="date-warn" id="dateWarn"></div>
+        </div>
+      </fieldset>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="btnSave" type="submit"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>Enregistrer</button>
+        <button class="btn btn-gold" id="btnPrint" type="button"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Imprimer</button>
+        <button class="btn btn-ghost wide" id="btnNew" type="button"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Nouveau badge</button>
+      </div>
+      <p class="kbd">Ctrl+S enregistre, Ctrl+P imprime</p>
+    </form>
+  </section>
+</main>
+
+<!-- Print dialog -->
+<dialog id="dlgPrint">
+  <form method="dialog">
+    <div class="dlg-head"><h3 id="printTitle">Imprimer le badge</h3><p id="printSub"></p></div>
+    <div class="dlg-body">
+      <label class="choice"><input type="radio" name="pfmt" value="cr80" checked><div><strong>Carte CR80</strong><span>Une carte par page (85,6 × 53,98 mm), pour imprimante à cartes PVC ou export PDF.</span></div></label>
+      <label class="choice"><input type="radio" name="pfmt" value="a4"><div><strong>Planche A4</strong><span>Jusqu'à 10 cartes par feuille avec traits de coupe, pour imprimante bureau.</span></div></label>
+      <div class="f" style="margin-top:6px"><label for="pSides">Faces à imprimer</label>
+        <select id="pSides"><option value="front">Recto seulement</option><option value="both">Recto + verso (imprimante recto-verso)</option><option value="back">Verso seulement</option></select>
+      </div>
+      <p class="help" style="font-size:13px;color:var(--steel);margin-top:6px">Dans la fenêtre d'impression : marges « Aucune », échelle 100 %, graphiques d'arrière-plan activés.</p>
+    </div>
+    <div class="dlg-foot">
+      <button class="btn btn-ghost btn-sm" value="cancel" type="submit">Annuler</button>
+      <button class="btn btn-gold btn-sm" value="ok" type="submit" id="printGo">Imprimer</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Confirm dialog -->
+<dialog id="dlgConfirm">
+  <form method="dialog">
+    <div class="dlg-head"><h3 id="cfTitle">Confirmer</h3><p id="cfText"></p></div>
+    <div class="dlg-foot" style="border-top:0;padding-top:18px">
+      <button class="btn btn-ghost btn-sm" value="cancel" type="submit" id="cfCancel">Annuler</button>
+      <button class="btn btn-danger btn-sm" value="ok" type="submit" id="cfOk">Confirmer</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Settings dialog -->
+<dialog id="dlgSettings">
+  <form method="dialog" id="settingsForm">
+    <div class="dlg-head"><h3>Paramètres</h3><p>Appliqués à tous les badges. Enregistrés dans ce navigateur.</p></div>
+    <div class="dlg-body">
+      <div class="set-group">
+        <h4>En-tête de la carte</h4>
+        <div class="f"><label for="sDistrict">Intitulé de la direction</label><input type="text" id="sDistrict"></div>
+        <div class="f">
+          <label>Logo</label>
+          <div class="logo-row">
+            <img id="sLogoPreview" alt="Logo actuel">
+            <button type="button" class="mini" id="btnLogoPick">Remplacer</button>
+            <button type="button" class="mini" id="btnLogoReset">Logo d'origine</button>
+            <input type="file" id="sLogoFile" accept="image/*" hidden>
+          </div>
+        </div>
+      </div>
+      <div class="set-group">
+        <h4>Apparence</h4>
+        <label class="toggle">Filigrane NAFTAL au centre <input type="checkbox" id="sWm"></label>
+        <div class="range-row" style="margin:4px 0 8px"><span style="font-size:13px;color:var(--steel)">Intensité</span><input type="range" id="sWmOpacity" min="5" max="35" step="1" aria-label="Intensité du filigrane"><span id="sWmVal" style="font-size:13px;width:36px;text-align:right">16 %</span></div>
+        <label class="toggle">Contour noir (planche A4, repère de découpe) <input type="checkbox" id="sBorder"></label>
+        <label class="toggle">N° de série sous la photo <input type="checkbox" id="sSerial"></label>
+        <label class="toggle">Coins arrondis à l'impression CR80 <input type="checkbox" id="sRound"></label>
+      </div>
+      <div class="set-group">
+        <h4>Verso de la carte</h4>
+        <div class="f"><label for="sVTitle">Titre</label><input type="text" id="sVTitle" maxlength="40"></div>
+        <div class="f"><label for="sVText">Message (une ligne vide sépare les paragraphes)</label><textarea class="ta" id="sVText" rows="6" spellcheck="false"></textarea></div>
+        <div class="f"><label for="sVFoot">Pied de carte (adresse, téléphone)</label><textarea class="ta keep" id="sVFoot" rows="2" spellcheck="false"></textarea></div>
+        <button type="button" class="mini" id="btnVersoReset">Texte d'origine</button>
+      </div>
+      <div class="set-group">
+        <h4>Nouveaux badges</h4>
+        <div class="f"><label for="sValidity">Validité par défaut</label>
+          <select id="sValidity"><option value="0">Aucune date</option><option value="6">6 mois</option><option value="12">1 an</option><option value="24">2 ans</option><option value="36">3 ans</option></select>
+        </div>
+      </div>
+      <div class="set-group">
+        <h4>Données</h4>
+        <div class="data-btns">
+          <button type="button" class="btn btn-ghost btn-sm" id="btnExportJson">Sauvegarde complète (.json)</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="btnExportCsv">Liste Excel (.csv)</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="btnCsvModel">Modèle d'import (.csv)</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="btnImport2">Importer…</button>
+        </div>
+        <button type="button" class="btn btn-sm" id="btnClear" style="margin-top:10px;width:100%;color:var(--red);border:1px solid #F1B3AC;background:#fff">Supprimer tous les badges</button>
+      </div>
+    </div>
+    <div class="dlg-foot">
+      <button class="btn btn-ghost btn-sm" value="cancel" type="submit">Fermer</button>
+      <button class="btn btn-primary btn-sm" value="ok" type="submit" id="settingsSave">Appliquer</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><span id="toastText"></span><button type="button" id="toastBtn"></button></div>
+<div id="printRoot" aria-hidden="true"></div>
+
+<script>
+(() => {
+'use strict';
+
+const BUILTIN_LOGO = 'data:image/jpeg;base64,__LOGO__';
+const WATERMARK = 'data:image/png;base64,__WM__';
+const APP_ICON_WIDE = 'data:image/png;base64,__ICONWIDE__';
+const AUTHOR_NAME = 'Aymen';
+const AUTHOR_PHOTO = 'data:image/jpeg;base64,__AUTHOR__';
+const $ = (id) => document.getElementById(id);
+const DEFAULT_SETTINGS = {
+  district: 'District Commercialisation Alger',
+  logo: '', watermark: true, wmOpacity: 16, border: true, showSerial: true,
+  roundCr80: false, validityMonths: 12, printFormat: 'cr80', printSides: 'front',
+  versoTitle: 'IMPORTANT',
+  versoText: 'CETTE CARTE EST STRICTEMENT PERSONNELLE\nET NE DOIT EN AUCUN CAS ETRE UTILISEE\nPAR DES TIERCES PERSONNES\n\nEN CAS DE VOL OU DE PERTE, IL EST IMPERATIF\nDE LE SIGNALER IMMEDIATEMENT AU DISTRICT',
+  versoFooter: 'Naftal, 06 rue Ahmed Azouz El Mohamadia.\nTel : 023 75 14 01   Fax : 023 75 14 03'
+};
+
+/* ══════════ Code 128 (B / C) — no external library ══════════ */
+const C128 = ['212222','222122','222221','121223','121322','131222','122213','122312','132212','221213','221312','231212','112232','122132','122231','113222','123122','123221','223211','221132','221231','213212','223112','312131','311222','321122','321221','312212','322112','322211','212123','212321','232121','111323','131123','131321','112313','132113','132311','211313','231113','231311','112133','112331','132131','113123','113321','133121','313121','211331','231131','213113','213311','213131','311123','311321','331121','312113','312311','332111','314111','221411','431111','111224','111422','121124','121421','141122','141221','112214','112412','122114','122411','142112','142211','241211','221114','413111','241112','134111','111242','121142','121241','114212','124112','124211','411212','421112','421211','212141','214121','412121','111143','111341','131141','114113','114311','411113','411311','113141','114131','311141','411131','211412','211214','211232','2331112'];
+function code128Codes(text) {
+  const codes = [];
+  if (/^\d+$/.test(text) && text.length >= 2 && text.length % 2 === 0) {
+    codes.push(105);
+    for (let i = 0; i < text.length; i += 2) codes.push(parseInt(text.substr(i, 2), 10));
+  } else {
+    codes.push(104);
+    for (const ch of text) {
+      let c = ch.charCodeAt(0);
+      if (c < 32 || c > 126) c = 63; // '?'
+      codes.push(c - 32);
+    }
+  }
+  let sum = codes[0];
+  for (let i = 1; i < codes.length; i++) sum += codes[i] * i;
+  codes.push(sum % 103, 106);
+  return codes;
+}
+function code128Svg(text) {
+  const pattern = code128Codes(text).map(c => C128[c]).join('');
+  let x = 0, bar = true, rects = '';
+  for (const w of pattern) {
+    const n = +w;
+    if (bar) rects += `<rect x="${x}" y="0" width="${n}" height="10"/>`;
+    x += n; bar = !bar;
+  }
+  return { modules: x, svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${x} 10" preserveAspectRatio="none" shape-rendering="crispEdges" fill="#000">${rects}</svg>` };
+}
+
+/* ══════════ Storage: IndexedDB, with localStorage fallback ══════════ */
+const Store = (() => {
+  let idb = null;
+  const LS_B = 'naftal_v3_badges', LS_KV = 'naftal_v3_kv';
+  function open() {
+    return new Promise((res, rej) => {
+      if (!window.indexedDB) return rej(new Error('no idb'));
+      const r = indexedDB.open('naftal_badges', 1);
+      r.onupgradeneeded = () => { const d = r.result; d.createObjectStore('badges', { keyPath: 'id' }); d.createObjectStore('kv'); };
+      r.onsuccess = () => res(r.result);
+      r.onerror = () => rej(r.error);
+    });
+  }
+  function run(store, mode, fn) {
+    return new Promise((res, rej) => {
+      const t = idb.transaction(store, mode);
+      const req = fn(t.objectStore(store));
+      let out;
+      if (req) req.onsuccess = () => { out = req.result; };
+      t.oncomplete = () => res(out);
+      t.onerror = () => rej(t.error);
+      t.onabort = () => rej(t.error || new Error('abort'));
+    });
+  }
+  const lsRead = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch (_) { return d; } };
+  const lsWrite = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+  return {
+    get mode() { return idb ? 'idb' : 'ls'; },
+    async init() { try { idb = await open(); } catch (_) { idb = null; } },
+    async all() { return idb ? run('badges', 'readonly', s => s.getAll()) : lsRead(LS_B, []); },
+    async putMany(recs) {
+      if (idb) return run('badges', 'readwrite', s => { recs.forEach(r => s.put(r)); });
+      const all = lsRead(LS_B, []);
+      recs.forEach(r => { const i = all.findIndex(x => x.id === r.id); if (i > -1) all[i] = r; else all.push(r); });
+      lsWrite(LS_B, all);
+    },
+    put(rec) { return this.putMany([rec]); },
+    async delMany(ids) {
+      if (idb) return run('badges', 'readwrite', s => { ids.forEach(id => s.delete(id)); });
+      lsWrite(LS_B, lsRead(LS_B, []).filter(r => !ids.includes(r.id)));
+    },
+    async clear() { if (idb) return run('badges', 'readwrite', s => s.clear()); lsWrite(LS_B, []); },
+    async get(key) { if (idb) return run('kv', 'readonly', s => s.get(key)); return lsRead(LS_KV, {})[key]; },
+    async set(key, val) {
+      if (idb) return run('kv', 'readwrite', s => s.put(val, key));
+      const kv = lsRead(LS_KV, {}); kv[key] = val; lsWrite(LS_KV, kv);
+    }
+  };
+})();
+
+/* ══════════ State ══════════ */
+let records = [];
+let settings = { ...DEFAULT_SETTINGS };
+let currentId = null;
+let photo = '';
+let baseline = '';
+let filter = 'all';
+let zoom = 'fit';
+let face = 'front';
+const selected = new Set();
+let toastTimer = null;
+let pendingPrint = null;
+
+/* ══════════ Helpers ══════════ */
+const norm = (s) => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const isoDate = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+function fmtDate(iso) {
+  if (!iso) return '';
+  const p = iso.split('-');
+  return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : iso;
+}
+function addMonths(months) {
+  const d = new Date(); d.setHours(0, 0, 0, 0);
+  const day = d.getDate();
+  d.setDate(1); d.setMonth(d.getMonth() + months);
+  const last = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+  d.setDate(Math.min(day, last));
+  return isoDate(d);
+}
+function validity(iso) {
+  if (!iso) return { key: 'none', label: 'Sans date' };
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const d = new Date(iso + 'T00:00:00');
+  if (isNaN(d)) return { key: 'none', label: 'Sans date' };
+  const days = Math.round((d - today) / 86400000);
+  if (days < 0) return { key: 'exp', label: 'Expiré', days };
+  if (days <= 30) return { key: 'soon', label: days === 0 ? "Expire aujourd'hui" : `Expire dans ${days} j`, days };
+  return { key: 'ok', label: 'Valide', days };
+}
+const plural = (n, one, many) => `${n} ${n > 1 ? many : one}`;
+function newId() { return 'b_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+
+function toast(text, opts = {}) {
+  const el = $('toast'), btn = $('toastBtn');
+  clearTimeout(toastTimer);
+  $('toastText').textContent = text;
+  el.classList.toggle('err', !!opts.error);
+  btn.textContent = opts.action ? opts.action.label : '';
+  btn.onclick = opts.action ? () => { el.classList.remove('show'); opts.action.fn(); } : null;
+  el.classList.add('show');
+  toastTimer = setTimeout(() => el.classList.remove('show'), opts.action ? 7000 : 3800);
+}
+
+function confirmBox(title, text, okLabel = 'Confirmer') {
+  return new Promise(res => {
+    const d = $('dlgConfirm');
+    $('cfTitle').textContent = title; $('cfText').textContent = text; $('cfOk').textContent = okLabel;
+    d.returnValue = '';
+    d.onclose = () => res(d.returnValue === 'ok');
+    d.showModal();
+    $('cfCancel').focus();
+  });
+}
+
+function download(name, content, type) {
+  const blob = content instanceof Blob ? content : new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+/* ══════════ Serial numbers ══════════ */
+async function peekSerial() {
+  const stored = Number(await Store.get('seq')) || 0;
+  const maxDb = records.reduce((m, r) => Math.max(m, Number(r.seq) || 0), 0);
+  const seq = Math.max(stored, maxDb) + 1;
+  return { seq, text: `${new Date().getFullYear()}-${String(seq).padStart(4, '0')}` };
+}
+
+/* ══════════ Badge rendering ══════════ */
+function buildCard(rec, opts = {}) {
+  const s = settings;
+  const card = document.createElement('div');
+  card.className = 'card' + (s.border && !opts.noBorder ? '' : ' no-border') + (opts.round ? ' round' : '');
+  const mat = (rec.matricule || '').trim();
+  const code = mat || '000';
+  const bc = code128Svg(code);
+  // module width 0.25 mm, clamped so the barcode stays inside its zone
+  const bw = Math.max(14, Math.min(30, bc.modules * 0.25));
+  const bLeft = 29.1;
+  const placeholder = opts.placeholder;
+  const val = (v, ph) => esc(v || (placeholder ? ph : ''));
+  card.innerHTML = `
+    <div class="c-logo"><img src="${s.logo || BUILTIN_LOGO}" alt=""></div>
+    <div class="c-district" data-fit="15,7">${esc(s.district)}</div>
+    <div class="c-banner" data-fit="15,7">${esc(rec.type || 'Carte Professionnelle')}</div>
+    ${s.watermark ? `<img class="c-wm" src="${WATERMARK}" alt="" style="opacity:${(s.wmOpacity || 16) / 100}">` : ''}
+    <div class="c-photo">${rec.photo ? `<img src="${rec.photo}" alt="">` : ''}</div>
+    ${s.showSerial && rec.serial ? `<div class="c-serial">N° ${esc(rec.serial)}</div>` : ''}
+    <div class="c-row big r1"><span class="l"><span>Nom</span><span>:</span></span><span class="v" data-field="fNom" data-fit="10.6,6">${val(rec.nom)}</span></div>
+    <div class="c-row big r2"><span class="l"><span>Prénom</span><span>:</span></span><span class="v" data-field="fPrenom" data-fit="10.6,6">${val(rec.prenom)}</span></div>
+    <div class="c-row sm r3"><span class="l"><span>Fonction</span><span>:</span></span><span class="v" data-field="fFonction" data-fit="9,5.2">${val(rec.fonction)}</span></div>
+    <div class="c-row sm r4"><span class="l"><span>Structure</span><span>:</span></span><span class="v" data-field="fStructure" data-fit="9,5.2">${val(rec.structure)}</span></div>
+    ${rec.valide ? `<div class="c-row sm r5"><span class="l"><span>Valide au</span><span>:</span></span><span class="v">${esc(fmtDate(rec.valide))}</span></div>` : ''}
+    <div class="c-mat">Matricule</div>
+    <div class="c-bar" style="left:${bLeft}mm;width:${bw}mm">${bc.svg}</div>
+    <div class="c-barnum" style="left:${bLeft - 4}mm;width:${bw + 8}mm" data-fit="9.4,6">${esc(code)}</div>
+    <div class="c-siege" data-field="fAffect" data-fit="12.6,7">${esc(rec.affectation || 'Siège')}</div>`;
+  return card;
+}
+
+function buildBack(opts = {}) {
+  const s = settings;
+  const card = document.createElement('div');
+  card.className = 'card back' + (s.border && !opts.noBorder ? '' : ' no-border') + (opts.round ? ' round' : '');
+  const lines = (txt, max) => String(txt || '').replace(/\r/g, '').split('\n').slice(0, max)
+    .map(l => `<div class="v-line"${l.trim() ? ' data-fit="9.6,5"' : ''}>${esc(l) || '&nbsp;'}</div>`).join('');
+  card.innerHTML = `
+    ${s.versoTitle ? `<div class="v-title" data-fit="16,9"><span>${esc(s.versoTitle)}</span></div>` : ''}
+    <div class="v-msg">${lines(s.versoText, 7)}</div>
+    ${s.versoFooter ? `<div class="v-rule"></div><div class="v-foot">${lines(s.versoFooter, 3)}</div>` : ''}`;
+  return card;
+}
+
+// Shrink text until it fits its box (must be attached to the DOM)
+function fitCard(card) {
+  card.querySelectorAll('[data-fit]').forEach(el => {
+    const [max, min] = el.dataset.fit.split(',').map(Number);
+    let size = max;
+    el.style.fontSize = size + 'pt';
+    el.style.textOverflow = '';
+    while (el.scrollWidth > el.clientWidth + 0.5 && size > min) {
+      size = Math.round((size - 0.2) * 10) / 10;
+      el.style.fontSize = size + 'pt';
+    }
+    if (el.scrollWidth > el.clientWidth + 0.5) el.style.textOverflow = 'ellipsis';
+  });
+}
+
+// Flag form fields whose text is cut on the card
+function markTruncated(card) {
+  ['fNom', 'fPrenom', 'fFonction', 'fStructure', 'fAffect'].forEach(id => {
+    const el = card.querySelector(`[data-field="${id}"]`);
+    const f = $(id).closest('.f');
+    let note = f.querySelector('.trunc');
+    if (!note) { note = document.createElement('div'); note.className = 'trunc'; note.textContent = 'Trop long pour la carte : le texte est coupé. Abrégez-le.'; f.appendChild(note); }
+    f.classList.toggle('is-trunc', !!el && el.style.textOverflow === 'ellipsis');
+  });
+}
+
+let cardPx = { w: 0, h: 0 };
+function renderPreview() {
+  const rec = readForm();
+  const front = buildCard(rec), back = buildBack();
+  const flip = document.createElement('div');
+  flip.id = 'flipper';
+  flip.className = 'flipper' + (face === 'back' ? ' is-back' : '');
+  flip.title = 'Cliquer pour retourner la carte';
+  flip.append(front, back);
+  (face === 'back' ? back : front).id = 'previewCard';
+  const inner = $('frameInner');
+  inner.replaceChildren(flip);
+  fitCard(front); fitCard(back);
+  markTruncated(front);
+  cardPx = { w: front.offsetWidth, h: front.offsetHeight };
+  layoutStage();
+  updateStatus();
+}
+
+function layoutStage() {
+  const stage = $('stage');
+  if (!cardPx.w) return;
+  const pad = stage.clientWidth < 600 ? 56 : 110;
+  const availW = stage.clientWidth - pad, availH = stage.clientHeight - pad;
+  let scale = zoom === 'real' ? 1 : Math.max(0.5, Math.min(availW / cardPx.w, availH / cardPx.h, 2.6));
+  if (zoom === 'real' && cardPx.w > stage.clientWidth - 60) scale = (stage.clientWidth - 60) / cardPx.w;
+  $('frameInner').style.transform = `scale(${scale})`;
+  $('frame').style.width = cardPx.w * scale + 'px';
+  $('frame').style.height = cardPx.h * scale + 'px';
+}
+
+/* ══════════ Form ══════════ */
+const FIELDS = ['fType', 'fNom', 'fPrenom', 'fFonction', 'fStructure', 'fAffect', 'fValide', 'fMatricule'];
+function readForm() {
+  return {
+    type: $('fType').value,
+    nom: $('fNom').value.trim(),
+    prenom: $('fPrenom').value.trim(),
+    fonction: $('fFonction').value.trim(),
+    structure: $('fStructure').value.trim(),
+    affectation: $('fAffect').value.trim() || 'Siège',
+    valide: $('fValide').value,
+    matricule: $('fMatricule').value.trim(),
+    serial: $('fSerial').value,
+    photo
+  };
+}
+const snapshot = () => JSON.stringify(readForm());
+const isDirty = () => snapshot() !== baseline;
+
+function writeForm(rec) {
+  $('fType').value = rec.type || 'Carte Professionnelle';
+  if (!$('fType').value) $('fType').selectedIndex = 0;
+  $('fNom').value = rec.nom || '';
+  $('fPrenom').value = rec.prenom || '';
+  $('fFonction').value = rec.fonction || '';
+  $('fStructure').value = rec.structure || '';
+  $('fAffect').value = rec.affectation || 'Siège';
+  $('fValide').value = rec.valide || '';
+  $('fMatricule').value = rec.matricule || '';
+  $('fSerial').value = rec.serial || '';
+  photo = rec.photo || '';
+  $('fPhoto').value = '';
+  clearErrors();
+  syncPhoto();
+}
+
+function clearErrors() { ['gNom', 'gMat'].forEach(id => $(id).classList.remove('invalid')); $('fNom').removeAttribute('aria-invalid'); $('fMatricule').removeAttribute('aria-invalid'); }
+
+function updateStatus() {
+  const dirty = isDirty();
+  const rec = currentId && records.find(r => r.id === currentId);
+  $('formTitle').textContent = rec ? 'Modifier le badge' : 'Nouveau badge';
+  const mode = $('formMode');
+  mode.textContent = rec ? `N° ${rec.serial}` : 'Brouillon';
+  mode.classList.toggle('dirty', dirty);
+  const name = [$('fNom').value.trim().toUpperCase(), $('fPrenom').value.trim()].filter(Boolean).join(' ');
+  $('stageStatus').innerHTML = rec
+    ? `<b>${esc(name || 'Sans nom')}</b>, badge N° ${esc(rec.serial)}${dirty ? ' (modifications non enregistrées)' : ''}`
+    : `<b>Nouveau badge</b>${name ? `, ${esc(name)}` : ''} (pas encore enregistré)`;
+  const v = validity($('fValide').value);
+  const w = $('dateWarn');
+  w.className = 'date-warn' + (v.key === 'exp' ? ' exp' : v.key === 'soon' ? ' soon' : '');
+  w.textContent = v.key === 'exp' ? 'Cette date est déjà passée : la carte sera imprimée expirée.' : v.key === 'soon' ? `${v.label}.` : '';
+}
+
+function onFieldInput(e) {
+  // text fields already re-render on every keystroke; re-rendering again on blur would swallow a click on the card
+  if (e && e.type === 'change' && e.target.type === 'text') return;
+  if (e && e.target.id === 'fNom' && $('fNom').value.trim()) $('gNom').classList.remove('invalid');
+  if (e && e.target.id === 'fMatricule' && $('fMatricule').value.trim()) $('gMat').classList.remove('invalid');
+  renderPreview();
+  if (face === 'back') setFace('front');
+}
+
+async function guardDirty() {
+  if (!isDirty()) return true;
+  return confirmBox('Modifications non enregistrées', 'Les changements apportés à ce badge seront perdus.', 'Abandonner les changements');
+}
+
+async function newBadge(force = false) {
+  if (!force && !(await guardDirty())) return;
+  currentId = null;
+  const s = await peekSerial();
+  writeForm({ serial: s.text, valide: settings.validityMonths ? addMonths(settings.validityMonths) : '', affectation: 'Siège' });
+  baseline = snapshot();
+  renderPreview(); renderList();
+}
+
+async function openRecord(id) {
+  if (id === currentId) return;
+  if (!(await guardDirty())) return;
+  const rec = records.find(r => r.id === id);
+  if (!rec) return;
+  currentId = id;
+  writeForm(rec);
+  baseline = snapshot();
+  renderPreview(); renderList();
+}
+
+async function duplicateAsTemplate(id) {
+  if (!(await guardDirty())) return;
+  const rec = records.find(r => r.id === id);
+  if (!rec) return;
+  currentId = null;
+  const s = await peekSerial();
+  writeForm({ ...rec, nom: '', prenom: '', matricule: '', photo: '', serial: s.text });
+  baseline = snapshot();
+  renderPreview(); renderList();
+  $('fNom').focus();
+  toast('Modèle copié : saisissez le nom, le matricule et la photo.');
+}
+
+async function save() {
+  const data = readForm();
+  clearErrors();
+  let firstBad = null;
+  if (!data.nom) { $('gNom').classList.add('invalid'); $('fNom').setAttribute('aria-invalid', 'true'); firstBad = firstBad || $('fNom'); }
+  if (!data.matricule) { $('matErr').textContent = 'Saisissez le matricule.'; $('gMat').classList.add('invalid'); $('fMatricule').setAttribute('aria-invalid', 'true'); firstBad = firstBad || $('fMatricule'); }
+  if (firstBad) { firstBad.focus(); toast('Complétez les champs obligatoires.', { error: true }); return false; }
+
+  const dup = records.find(r => r.id !== currentId && norm(r.matricule) === norm(data.matricule));
+  if (dup && !(await confirmBox('Matricule déjà utilisé', `Le matricule ${data.matricule} est déjà attribué à ${dup.nom} ${dup.prenom} (badge N° ${dup.serial}). Enregistrer quand même ?`, 'Enregistrer quand même'))) {
+    $('fMatricule').focus(); return false;
+  }
+
+  let rec;
+  const now = Date.now();
+  if (currentId) {
+    const old = records.find(r => r.id === currentId);
+    rec = { ...old, ...data, serial: old.serial, updated: now };
+  } else {
+    const s = await peekSerial();
+    rec = { id: newId(), seq: s.seq, created: now, updated: now, ...data, serial: s.text };
+  }
+  try {
+    await Store.put(rec);
+    if (!currentId) await Store.set('seq', rec.seq);
+  } catch (e) {
+    toast("Enregistrement impossible : l'espace de stockage du navigateur est plein. Faites une sauvegarde puis supprimez d'anciens badges.", { error: true });
+    return false;
+  }
+  const i = records.findIndex(r => r.id === rec.id);
+  if (i > -1) records[i] = rec; else records.push(rec);
+  const wasNew = !currentId;
+  currentId = rec.id;
+  $('fSerial').value = rec.serial;
+  baseline = snapshot();
+  renderPreview(); renderList(); refreshDatalists(); updateStorage();
+  toast(wasNew ? `Badge N° ${rec.serial} enregistré.` : `Badge N° ${rec.serial} mis à jour.`);
+  return true;
+}
+
+async function removeRecords(ids) {
+  const recs = records.filter(r => ids.includes(r.id));
+  if (!recs.length) return;
+  await Store.delMany(ids);
+  records = records.filter(r => !ids.includes(r.id));
+  ids.forEach(id => selected.delete(id));
+  const hadCurrent = ids.includes(currentId);
+  if (hadCurrent) await newBadge(true); else renderList();
+  updateStorage();
+  toast(recs.length === 1 ? `Badge de ${recs[0].nom} supprimé.` : `${recs.length} badges supprimés.`, {
+    action: { label: 'Annuler', fn: async () => {
+      await Store.putMany(recs);
+      records.push(...recs);
+      renderList(); updateStorage();
+      toast(recs.length === 1 ? 'Badge restauré.' : `${recs.length} badges restaurés.`);
+    } }
+  });
+}
+
+/* ══════════ Photo ══════════ */
+const PHOTO_RATIO = 22.7 / 26;
+function processPhoto(file) {
+  if (!file || (file.type && !/^image\//.test(file.type))) { toast('Ce fichier n\'est pas une image. Choisissez un JPG ou un PNG.', { error: true }); return; }
+  const reader = new FileReader();
+  reader.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      let sx = 0, sy = 0, sw = img.naturalWidth, sh = img.naturalHeight;
+      if (sw / sh > PHOTO_RATIO) { const w = sh * PHOTO_RATIO; sx = (sw - w) / 2; sw = w; }
+      else { const h = sw / PHOTO_RATIO; sy = Math.max(0, (sh - h) * 0.35); sh = h; } // keep head room on portrait shots
+      const c = document.createElement('canvas');
+      c.width = 340; c.height = Math.round(340 / PHOTO_RATIO); // ≈ 380 dpi at 22.7 mm
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, c.width, c.height);
+      photo = c.toDataURL('image/jpeg', 0.85);
+      syncPhoto(); renderPreview();
+    };
+    img.onerror = () => toast('Image illisible. Essayez un autre fichier.', { error: true });
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+}
+function syncPhoto() {
+  const thumb = $('dropThumb');
+  if (photo) {
+    thumb.innerHTML = `<img src="${photo}" alt="Photo du titulaire">`;
+    $('dropText').innerHTML = '<strong>Photo recadrée</strong>Format 22,7 × 26 mm, prête à imprimer.';
+    $('btnPickPhoto').textContent = 'Changer';
+    $('btnRemovePhoto').hidden = false;
+  } else {
+    thumb.innerHTML = '<svg class="i" style="width:26px;height:26px" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>';
+    $('dropText').innerHTML = '<strong>Ajouter une photo</strong>Déposez une image, collez-la (Ctrl+V) ou parcourez vos fichiers.';
+    $('btnPickPhoto').textContent = 'Parcourir';
+    $('btnRemovePhoto').hidden = true;
+  }
+}
+
+/* ══════════ Registry list ══════════ */
+function filteredRecords() {
+  const q = norm($('search').value);
+  return records
+    .filter(r => !q || [r.nom, r.prenom, `${r.nom} ${r.prenom}`, `${r.prenom} ${r.nom}`, r.matricule, r.serial, r.structure, r.fonction, r.affectation].some(f => norm(f).includes(q)))
+    .filter(r => {
+      if (filter === 'all') return true;
+      const k = validity(r.valide).key;
+      if (filter === 'valid') return k === 'ok' || k === 'soon' || k === 'none';
+      if (filter === 'soon') return k === 'soon';
+      return k === 'exp';
+    })
+    .sort((a, b) => (b.created || 0) - (a.created || 0));
+}
+
+function renderList() {
+  const list = $('list');
+  const rows = filteredRecords();
+  $('regCount').textContent = plural(records.length, 'badge', 'badges');
+  list.replaceChildren();
+  if (!rows.length) {
+    list.innerHTML = records.length
+      ? '<div class="empty"><strong>Aucun résultat</strong>Modifiez la recherche ou le filtre.</div>'
+      : '<div class="empty"><strong>Le registre est vide</strong>Remplissez la fiche à droite puis cliquez sur Enregistrer, ou importez une liste CSV.</div>';
+  }
+  const frag = document.createDocumentFragment();
+  rows.forEach(r => {
+    const v = validity(r.valide);
+    const row = document.createElement('div');
+    row.className = 'row' + (r.id === currentId ? ' active' : '');
+    row.setAttribute('role', 'listitem');
+    row.dataset.id = r.id;
+    row.innerHTML = `
+      <input type="checkbox" aria-label="Sélectionner ${esc(r.nom)} ${esc(r.prenom)}" ${selected.has(r.id) ? 'checked' : ''}>
+      ${r.photo ? `<img src="${r.photo}" alt="">` : '<span class="ph"></span>'}
+      <div style="min-width:0">
+        <div class="row-name">${esc(r.nom)} ${esc(r.prenom)}</div>
+        <div class="row-sub">${esc(r.structure || r.fonction || (r.type || '').replace('Carte ', ''))}</div>
+      </div>
+      <div class="row-end">
+        <span class="row-mat" title="Matricule">${esc(r.matricule)}</span>
+        <span class="chip ${v.key}" title="${r.valide ? 'Valide au ' + fmtDate(r.valide) : ''}">${esc(v.label)}</span>
+      </div>`;
+    frag.appendChild(row);
+  });
+  list.appendChild(frag);
+  updateSelection(rows);
+  updateStatus();
+}
+
+function updateSelection(rows = filteredRecords()) {
+  for (const id of [...selected]) if (!records.some(r => r.id === id)) selected.delete(id);
+  const n = selected.size;
+  $('selbar').classList.toggle('show', n > 0);
+  $('selCount').textContent = plural(n, 'badge sélectionné', 'badges sélectionnés');
+  const visibleSel = rows.filter(r => selected.has(r.id)).length;
+  const all = $('selAll');
+  all.checked = rows.length > 0 && visibleSel === rows.length;
+  all.indeterminate = visibleSel > 0 && visibleSel < rows.length;
+  all.disabled = rows.length === 0;
+  $('listInfo').textContent = rows.length === records.length ? 'Tout sélectionner' : `Sélectionner les ${rows.length} résultats`;
+}
+
+function refreshDatalists() {
+  const fill = (id, key, extra = []) => {
+    const vals = [...new Set([...extra, ...records.map(r => r[key]).filter(Boolean)])].sort((a, b) => a.localeCompare(b, 'fr'));
+    $(id).innerHTML = vals.map(v => `<option value="${esc(v)}"></option>`).join('');
+  };
+  fill('dlFonction', 'fonction');
+  fill('dlStructure', 'structure');
+  fill('dlAffect', 'affectation', ['Siège']);
+}
+
+async function updateStorage() {
+  let text = plural(records.length, 'badge', 'badges');
+  let warn = false;
+  try {
+    if (navigator.storage && navigator.storage.estimate) {
+      const { usage = 0, quota = 0 } = await navigator.storage.estimate();
+      text += `, ${(usage / 1048576).toFixed(1)} Mo utilisés`;
+      warn = quota > 0 && usage / quota > 0.8;
+    }
+  } catch (_) {}
+  if (Store.mode === 'ls') text += ' (mode limité)';
+  const el = $('storageInfo');
+  el.textContent = text;
+  el.classList.toggle('warn', warn);
+}
+
+/* ══════════ Printing ══════════ */
+function openPrintDialog(recs, label) {
+  if (!recs.length) return;
+  pendingPrint = recs;
+  $('printTitle').textContent = recs.length === 1 ? 'Imprimer le badge' : `Imprimer ${recs.length} badges`;
+  $('printSub').textContent = label;
+  const fmt = settings.printFormat || 'cr80';
+  document.querySelector(`input[name="pfmt"][value="${fmt}"]`).checked = true;
+  $('pSides').value = settings.printSides || 'front';
+  $('dlgPrint').returnValue = '';
+  $('dlgPrint').showModal();
+  $('printGo').focus();
+}
+
+async function doPrint(recs, fmt, sides = 'front') {
+  const root = $('printRoot');
+  root.replaceChildren();
+  root.className = fmt === 'a4' ? 'p-a4' : 'p-cr80';
+  const cards = [];
+  if (fmt === 'a4') {
+    const W = 85.6, H = 53.98, cols = 2, rows = 5;
+    const ox = (210 - W * cols) / 2, oy = (297 - H * rows) / 2;
+    const passes = sides === 'both' ? ['front', 'back'] : [sides];
+    for (let p = 0; p < recs.length; p += cols * rows)
+    for (const side of passes) {
+      const sheet = document.createElement('div');
+      sheet.className = 'sheet ' + side;
+      recs.slice(p, p + cols * rows).forEach((r, i) => {
+        const c = side === 'back' ? buildBack({ round: true }) : buildCard(r, { round: true });
+        // backs are mirrored left/right so they land behind their front (long-edge duplex)
+        const col = side === 'back' ? cols - 1 - (i % cols) : i % cols;
+        c.style.left = (ox + col * W) + 'mm';
+        c.style.top = (oy + Math.floor(i / cols) * H) + 'mm';
+        sheet.appendChild(c); cards.push(c);
+      });
+      // crop marks outside the grid
+      const mk = (l, t, w, h) => { const m = document.createElement('div'); m.className = 'crop'; Object.assign(m.style, { left: l + 'mm', top: t + 'mm', width: w + 'mm', height: h + 'mm' }); sheet.appendChild(m); };
+      for (let c = 0; c <= cols; c++) { const x = ox + c * W; mk(x - 0.1, oy - 7, 0.2, 5); mk(x - 0.1, oy + rows * H + 2, 0.2, 5); }
+      for (let r = 0; r <= rows; r++) { const y = oy + r * H; mk(ox - 7, y - 0.1, 5, 0.2); mk(ox + cols * W + 2, y - 0.1, 5, 0.2); }
+      root.appendChild(sheet);
+    }
+  } else {
+    const o = { round: settings.roundCr80, noBorder: true };
+    recs.forEach(r => {
+      if (sides !== 'back') { const c = buildCard(r, o); root.appendChild(c); cards.push(c); }
+      if (sides !== 'front') { const c = buildBack(o); root.appendChild(c); cards.push(c); }
+    });
+  }
+  let pageStyle = $('pageStyle');
+  if (!pageStyle) { pageStyle = document.createElement('style'); pageStyle.id = 'pageStyle'; document.head.appendChild(pageStyle); }
+  pageStyle.textContent = fmt === 'a4' ? '@page { size: A4 portrait; margin: 0; }' : '@page { size: 85.6mm 53.98mm; margin: 0; }';
+  try { await document.fonts.ready; } catch (_) {}
+  cards.forEach(fitCard);
+  await Promise.all([...root.querySelectorAll('img')].map(img => img.decode ? img.decode().catch(() => {}) : null));
+  window.print();
+}
+window.addEventListener('afterprint', () => { $('printRoot').replaceChildren(); });
+
+async function printCurrent() {
+  if (isDirty() || !currentId) { if (!(await save())) return; }
+  const rec = records.find(r => r.id === currentId);
+  if (rec) openPrintDialog([rec], `${rec.nom} ${rec.prenom}, badge N° ${rec.serial}`.trim());
+}
+
+/* ══════════ Import / export ══════════ */
+function exportJson() {
+  if (!records.length) { toast('Le registre est vide : rien à sauvegarder.', { error: true }); return; }
+  const payload = { app: 'naftal-badges', version: 3, exported: new Date().toISOString(), settings, badges: records };
+  download(`naftal_badges_${isoDate(new Date())}.json`, JSON.stringify(payload, null, 2), 'application/json');
+  toast(`Sauvegarde de ${plural(records.length, 'badge', 'badges')} téléchargée.`);
+}
+
+const CSV_COLS = [['matricule', 'Matricule'], ['nom', 'Nom'], ['prenom', 'Prénom'], ['fonction', 'Fonction'], ['structure', 'Structure'], ['affectation', 'Affectation'], ['type', 'Type'], ['valide', 'Valide au'], ['serial', 'N° de série']];
+const csvCell = (v) => { v = String(v ?? ''); return /[";\n\r]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v; };
+function exportCsv(model = false) {
+  if (!model && !records.length) { toast('Le registre est vide : rien à exporter.', { error: true }); return; }
+  const head = (model ? CSV_COLS.slice(0, 8) : CSV_COLS).map(c => c[1]).join(';');
+  const lines = model
+    ? ['12345;MANSOURI;Yacine;Ingénieur;Département Informatique;Siège;Carte Professionnelle;31/12/2027']
+    : records.map(r => CSV_COLS.map(([k]) => csvCell(k === 'valide' ? fmtDate(r.valide) : r[k])).join(';'));
+  download(model ? 'modele_import_badges.csv' : `naftal_badges_${isoDate(new Date())}.csv`, '﻿' + [head, ...lines].join('\r\n'), 'text/csv;charset=utf-8');
+  if (!model) toast(`Liste de ${plural(records.length, 'badge', 'badges')} exportée.`);
+}
+
+function parseCsv(text) {
+  text = text.replace(/^﻿/, '');
+  const firstLine = text.split(/\r?\n/)[0] || '';
+  const delim = [';', ',', '\t'].map(d => [d, firstLine.split(d).length]).sort((a, b) => b[1] - a[1])[0][0];
+  const rows = []; let row = [], cell = '', q = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (q) {
+      if (ch === '"') { if (text[i + 1] === '"') { cell += '"'; i++; } else q = false; }
+      else cell += ch;
+    } else if (ch === '"') q = true;
+    else if (ch === delim) { row.push(cell); cell = ''; }
+    else if (ch === '\n' || ch === '\r') { if (ch === '\r' && text[i + 1] === '\n') i++; row.push(cell); rows.push(row); row = []; cell = ''; }
+    else cell += ch;
+  }
+  if (cell || row.length) { row.push(cell); rows.push(row); }
+  return rows.filter(r => r.some(c => c.trim()));
+}
+function toIsoDate(s) {
+  s = String(s || '').trim();
+  if (!s) return '';
+  let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (m) return `${m[1]}-${m[2].padStart(2, '0')}-${m[3].padStart(2, '0')}`;
+  m = s.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2,4})$/);
+  if (m) { const y = m[3].length === 2 ? '20' + m[3] : m[3]; return `${y}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`; }
+  return '';
+}
+const HEADER_MAP = { matricule: 'matricule', mat: 'matricule', nom: 'nom', prenom: 'prenom', fonction: 'fonction', poste: 'fonction', structure: 'structure', service: 'structure', departement: 'structure', affectation: 'affectation', lieu: 'affectation', siege: 'affectation', type: 'type', 'type de carte': 'type', 'valide au': 'valide', valide: 'valide', validite: 'valide', expiration: 'valide', 'date de validite': 'valide' };
+
+async function importFile(file) {
+  if (!file) return;
+  const text = await file.text();
+  const isJson = /\.json$/i.test(file.name) || /^\s*[\[{]/.test(text);
+  let incoming = [];
+  try {
+    if (isJson) {
+      const parsed = JSON.parse(text);
+      const arr = Array.isArray(parsed) ? parsed : parsed.badges;
+      if (!Array.isArray(arr)) throw new Error('format');
+      incoming = arr.map(it => ({ ...it, affectation: it.affectation || it.siege }));
+      if (!Array.isArray(parsed) && parsed.settings && typeof parsed.settings === 'object') {
+        if (await confirmBox('Paramètres inclus', 'Ce fichier contient aussi des paramètres (intitulé, logo, apparence). Les appliquer ?', 'Appliquer les paramètres')) {
+          settings = { ...DEFAULT_SETTINGS, ...sanitizeSettings(parsed.settings) };
+          await Store.set('settings', settings); applySettingsUI();
+        }
+      }
+    } else {
+      const rows = parseCsv(text);
+      if (rows.length < 2) throw new Error('empty');
+      const keys = rows[0].map(h => HEADER_MAP[norm(h).replace(/[^a-z ]/g, '').trim()] || null);
+      if (!keys.includes('nom') || !keys.includes('matricule')) throw new Error('header');
+      incoming = rows.slice(1).map(cells => { const o = {}; keys.forEach((k, i) => { if (k) o[k] = (cells[i] || '').trim(); }); o.valide = toIsoDate(o.valide); return o; });
+    }
+  } catch (e) {
+    toast(e.message === 'header' ? 'Colonnes Nom et Matricule introuvables. Utilisez le modèle d\'import CSV.' : 'Fichier illisible : choisissez une sauvegarde .json ou une liste .csv.', { error: true });
+    return;
+  }
+  const s0 = await peekSerial();
+  let seq = s0.seq - 1, added = 0, skipped = 0;
+  const year = new Date().getFullYear();
+  const toAdd = [];
+  for (const it of incoming) {
+    if (!it || typeof it !== 'object' || !String(it.nom || '').trim() || !String(it.matricule || '').trim()) { skipped++; continue; }
+    if (it.id && records.some(r => r.id === it.id)) { skipped++; continue; }
+    if (!it.id && records.concat(toAdd).some(r => norm(r.matricule) === norm(it.matricule) && norm(r.nom) === norm(it.nom))) { skipped++; continue; }
+    const hasSerial = it.serial && Number(it.seq);
+    if (!hasSerial) seq++;
+    toAdd.push({
+      id: String(it.id || newId()),
+      type: String(it.type || 'Carte Professionnelle'),
+      nom: String(it.nom).trim(), prenom: String(it.prenom || '').trim(),
+      fonction: String(it.fonction || ''), structure: String(it.structure || ''),
+      affectation: String(it.affectation || 'Siège'),
+      valide: toIsoDate(it.valide),
+      matricule: String(it.matricule).trim(),
+      seq: hasSerial ? Number(it.seq) : seq,
+      serial: hasSerial ? String(it.serial) : `${year}-${String(seq).padStart(4, '0')}`,
+      photo: typeof it.photo === 'string' && it.photo.startsWith('data:image/') ? it.photo : '',
+      created: Number(it.created) || Date.now() + added, updated: Date.now()
+    });
+    added++;
+  }
+  if (!toAdd.length) { toast(`Aucun nouveau badge à importer (${plural(skipped, 'ligne ignorée', 'lignes ignorées')}).`, { error: true }); return; }
+  try {
+    await Store.putMany(toAdd);
+    const maxSeq = Math.max(seq, ...toAdd.map(r => r.seq));
+    await Store.set('seq', Math.max(Number(await Store.get('seq')) || 0, maxSeq));
+  } catch (_) { toast('Import impossible : espace de stockage insuffisant.', { error: true }); return; }
+  records.push(...toAdd);
+  renderList(); refreshDatalists(); updateStorage();
+  if (!currentId && !isDirty()) await newBadge(true);
+  toast(`${plural(added, 'badge importé', 'badges importés')}${skipped ? `, ${plural(skipped, 'ligne ignorée', 'lignes ignorées')}` : ''}.`);
+}
+
+/* ══════════ Settings ══════════ */
+function sanitizeSettings(s) {
+  const o = {};
+  if (typeof s.district === 'string') o.district = s.district.slice(0, 80);
+  if (typeof s.logo === 'string' && (s.logo === '' || s.logo.startsWith('data:image/'))) o.logo = s.logo;
+  ['watermark', 'border', 'showSerial', 'roundCr80'].forEach(k => { if (typeof s[k] === 'boolean') o[k] = s[k]; });
+  if (Number.isFinite(+s.wmOpacity)) o.wmOpacity = Math.min(35, Math.max(5, +s.wmOpacity));
+  if (Number.isFinite(+s.validityMonths)) o.validityMonths = +s.validityMonths;
+  if (s.printFormat === 'a4' || s.printFormat === 'cr80') o.printFormat = s.printFormat;
+  if (['front', 'both', 'back'].includes(s.printSides)) o.printSides = s.printSides;
+  if (typeof s.versoTitle === 'string') o.versoTitle = s.versoTitle.slice(0, 40);
+  if (typeof s.versoText === 'string') o.versoText = s.versoText.slice(0, 600);
+  if (typeof s.versoFooter === 'string') o.versoFooter = s.versoFooter.slice(0, 200);
+  return o;
+}
+let draftLogo = '';
+function applyCredit() {
+  const name = AUTHOR_NAME;
+  $('creditName').textContent = name;
+  document.querySelector('meta[name="author"]').content = name;
+  $('creditPhoto').src = AUTHOR_PHOTO;
+  $('creditPhoto').alt = name;
+}
+function applySettingsUI() {
+  applyCredit();
+  $('topLogo').src = settings.logo || BUILTIN_LOGO; $('topLogo').hidden = !settings.logo;
+  $('topDistrict').textContent = settings.district;
+  renderPreview();
+}
+function openSettings() {
+  $('sDistrict').value = settings.district;
+  draftLogo = settings.logo;
+  $('sLogoPreview').src = draftLogo || BUILTIN_LOGO;
+  $('sWm').checked = settings.watermark;
+  $('sWmOpacity').value = settings.wmOpacity;
+  $('sWmVal').textContent = settings.wmOpacity + ' %';
+  $('sBorder').checked = settings.border;
+  $('sSerial').checked = settings.showSerial;
+  $('sRound').checked = settings.roundCr80;
+  $('sValidity').value = String(settings.validityMonths);
+  $('sVTitle').value = settings.versoTitle;
+  $('sVText').value = settings.versoText;
+  $('sVFoot').value = settings.versoFooter;
+  $('dlgSettings').returnValue = '';
+  $('dlgSettings').showModal();
+}
+async function saveSettings() {
+  settings = {
+    ...settings,
+    district: $('sDistrict').value.trim() || DEFAULT_SETTINGS.district,
+    logo: draftLogo,
+    watermark: $('sWm').checked,
+    wmOpacity: +$('sWmOpacity').value,
+    border: $('sBorder').checked,
+    showSerial: $('sSerial').checked,
+    roundCr80: $('sRound').checked,
+    validityMonths: +$('sValidity').value,
+    versoTitle: $('sVTitle').value.trim(),
+    versoText: $('sVText').value.replace(/\r/g, '').replace(/\s+$/, '').toUpperCase(),
+    versoFooter: $('sVFoot').value.replace(/\r/g, '').trim()
+  };
+  try { await Store.set('settings', settings); } catch (_) { toast('Paramètres non enregistrés : stockage plein.', { error: true }); }
+  applySettingsUI();
+  toast('Paramètres appliqués.');
+}
+
+/* ══════════ Events ══════════ */
+FIELDS.forEach(id => { $(id).addEventListener('input', onFieldInput); $(id).addEventListener('change', onFieldInput); });
+$('form').addEventListener('submit', (e) => { e.preventDefault(); save(); });
+$('btnPrint').addEventListener('click', printCurrent);
+$('btnNew').addEventListener('click', () => newBadge(false));
+
+document.querySelectorAll('[data-valid]').forEach(b => b.addEventListener('click', () => {
+  const v = b.dataset.valid;
+  $('fValide').value = v === 'eoy' ? `${new Date().getFullYear()}-12-31` : addMonths(+v);
+  renderPreview();
+}));
+
+// photo
+const drop = $('drop');
+$('btnPickPhoto').addEventListener('click', () => $('fPhoto').click());
+$('dropThumb').addEventListener('click', () => $('fPhoto').click());
+$('fPhoto').addEventListener('change', (e) => { processPhoto(e.target.files[0]); });
+$('btnRemovePhoto').addEventListener('click', () => { photo = ''; $('fPhoto').value = ''; syncPhoto(); renderPreview(); });
+['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', (e) => { const f = e.dataTransfer.files[0]; if (f) processPhoto(f); });
+document.addEventListener('paste', (e) => {
+  if (document.querySelector('dialog[open]')) return;
+  const item = [...(e.clipboardData?.items || [])].find(i => i.type.startsWith('image/'));
+  if (item) { e.preventDefault(); processPhoto(item.getAsFile()); toast('Photo collée depuis le presse-papiers.'); }
+});
+
+// registry
+$('search').addEventListener('input', () => renderList());
+document.querySelectorAll('[data-filter]').forEach(b => b.addEventListener('click', () => {
+  filter = b.dataset.filter;
+  document.querySelectorAll('[data-filter]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  renderList();
+}));
+$('list').addEventListener('click', (e) => {
+  const row = e.target.closest('.row'); if (!row) return;
+  if (e.target.matches('input[type="checkbox"]')) {
+    if (e.target.checked) selected.add(row.dataset.id); else selected.delete(row.dataset.id);
+    updateSelection(); return;
+  }
+  openRecord(row.dataset.id);
+});
+$('list').addEventListener('dblclick', (e) => { const row = e.target.closest('.row'); if (row && !e.target.matches('input')) duplicateAsTemplate(row.dataset.id); });
+$('selAll').addEventListener('change', (e) => {
+  const rows = filteredRecords();
+  rows.forEach(r => e.target.checked ? selected.add(r.id) : selected.delete(r.id));
+  renderList();
+});
+$('btnSelPrint').addEventListener('click', () => {
+  const recs = filteredRecords().filter(r => selected.has(r.id)).concat(records.filter(r => selected.has(r.id) && !filteredRecords().includes(r)));
+  openPrintDialog(recs, `${plural(recs.length, 'badge sélectionné', 'badges sélectionnés')} dans le registre`);
+});
+$('btnSelDelete').addEventListener('click', async () => {
+  const ids = [...selected];
+  if (await confirmBox(`Supprimer ${plural(ids.length, 'badge', 'badges')} ?`, 'Vous pourrez annuler juste après la suppression.', 'Supprimer')) removeRecords(ids);
+});
+
+// context menu on rows: duplicate / delete via keyboard
+$('list').addEventListener('keydown', (e) => {
+  const row = e.target.closest('.row'); if (!row) return;
+  if (e.key === 'Enter') openRecord(row.dataset.id);
+  if (e.key === 'Delete') removeRecords([row.dataset.id]);
+});
+
+// print dialog
+$('dlgPrint').addEventListener('close', async () => {
+  if ($('dlgPrint').returnValue !== 'ok' || !pendingPrint) return;
+  const fmt = document.querySelector('input[name="pfmt"]:checked').value;
+  const sides = $('pSides').value;
+  if (settings.printFormat !== fmt || settings.printSides !== sides) { settings.printFormat = fmt; settings.printSides = sides; Store.set('settings', settings).catch(() => {}); }
+  const recs = pendingPrint; pendingPrint = null;
+  await doPrint(recs, fmt, sides);
+});
+
+// import/export
+const pickImport = () => $('fileImport').click();
+$('btnImport').addEventListener('click', pickImport);
+$('btnImport2').addEventListener('click', () => { $('dlgSettings').close(); pickImport(); });
+$('fileImport').addEventListener('change', async (e) => { const f = e.target.files[0]; e.target.value = ''; await importFile(f); });
+$('btnExport').addEventListener('click', exportJson);
+$('btnExportJson').addEventListener('click', exportJson);
+$('btnExportCsv').addEventListener('click', () => exportCsv(false));
+$('btnCsvModel').addEventListener('click', () => exportCsv(true));
+$('btnClear').addEventListener('click', async () => {
+  if (!records.length) { toast('Le registre est déjà vide.'); return; }
+  $('dlgSettings').close();
+  if (!(await confirmBox('Supprimer tous les badges ?', `${plural(records.length, 'badge sera supprimé', 'badges seront supprimés')} de ce navigateur. Faites une sauvegarde avant si vous voulez les conserver.`, 'Tout supprimer'))) return;
+  const backup = records.slice();
+  await Store.clear(); records = []; selected.clear();
+  await newBadge(true); updateStorage();
+  toast('Registre vidé.', { action: { label: 'Annuler', fn: async () => { await Store.putMany(backup); records = backup; renderList(); refreshDatalists(); updateStorage(); toast('Registre restauré.'); } } });
+});
+
+// settings
+$('btnSettings').addEventListener('click', openSettings);
+$('dlgSettings').addEventListener('close', () => { if ($('dlgSettings').returnValue === 'ok') saveSettings(); });
+$('sWmOpacity').addEventListener('input', () => { $('sWmVal').textContent = $('sWmOpacity').value + ' %'; });
+$('btnLogoPick').addEventListener('click', () => $('sLogoFile').click());
+$('btnLogoReset').addEventListener('click', () => { draftLogo = ''; $('sLogoPreview').src = BUILTIN_LOGO; });
+$('sLogoFile').addEventListener('change', (e) => {
+  const f = e.target.files[0]; e.target.value = '';
+  if (!f || !f.type.startsWith('image/')) return;
+  const rd = new FileReader();
+  rd.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement('canvas');
+      const h = 220, w = Math.round(img.naturalWidth * h / img.naturalHeight);
+      c.width = Math.min(w, 600); c.height = h;
+      const ctx = c.getContext('2d'); ctx.fillStyle = '#F7D117'; ctx.fillRect(0, 0, c.width, c.height);
+      ctx.drawImage(img, 0, 0, c.width, c.height);
+      draftLogo = c.toDataURL('image/png');
+      $('sLogoPreview').src = draftLogo;
+    };
+    img.src = rd.result;
+  };
+  rd.readAsDataURL(f);
+});
+
+// recto / verso
+function setFace(f) {
+  if (f === face) return;
+  face = f;
+  document.querySelectorAll('[data-face]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.face === f)));
+  const fl = $('flipper');
+  if (!fl) return;
+  const [fr, bk] = fl.children;
+  fr.removeAttribute('id'); bk.removeAttribute('id');
+  (f === 'back' ? bk : fr).id = 'previewCard';
+  fl.classList.remove('lift'); void fl.offsetWidth; fl.classList.add('lift');
+  fl.classList.toggle('is-back', f === 'back');
+}
+document.querySelectorAll('[data-face]').forEach(b => b.addEventListener('click', () => setFace(b.dataset.face)));
+// the card can be rebuilt between mousedown and click (field change on blur), so any click in the frame flips
+$('frameInner').addEventListener('click', () => setFace(face === 'back' ? 'front' : 'back'));
+$('btnVersoReset').addEventListener('click', () => {
+  $('sVTitle').value = DEFAULT_SETTINGS.versoTitle;
+  $('sVText').value = DEFAULT_SETTINGS.versoText;
+  $('sVFoot').value = DEFAULT_SETTINGS.versoFooter;
+});
+
+// zoom
+document.querySelectorAll('[data-zoom]').forEach(b => b.addEventListener('click', () => {
+  zoom = b.dataset.zoom;
+  document.querySelectorAll('[data-zoom]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  layoutStage();
+}));
+new ResizeObserver(() => layoutStage()).observe($('stage'));
+
+// shortcuts
+document.addEventListener('keydown', (e) => {
+  if (document.querySelector('dialog[open]')) return;
+  const mod = e.ctrlKey || e.metaKey;
+  if (mod && e.key.toLowerCase() === 's') { e.preventDefault(); save(); }
+  if (mod && e.key.toLowerCase() === 'p') { e.preventDefault(); printCurrent(); }
+});
+window.addEventListener('beforeunload', (e) => { if (isDirty()) { e.preventDefault(); e.returnValue = ''; } });
+
+/* ══════════ Init ══════════ */
+async function migrateLegacy() {
+  if (await Store.get('migrated_v2')) return;
+  try {
+    const raw = JSON.parse(localStorage.getItem('naftal_badges_v2') || '[]');
+    if (Array.isArray(raw) && raw.length) {
+      const recs = raw.filter(r => r && r.id && r.nom).map(r => ({ ...r, affectation: r.affectation || r.siege || 'Siège' }));
+      await Store.putMany(recs);
+      const seq = parseInt(localStorage.getItem('naftal_seq') || '0', 10) || 0;
+      if (seq) await Store.set('seq', seq);
+    }
+  } catch (_) {}
+  await Store.set('migrated_v2', true);
+}
+
+async function init() {
+  await Store.init();
+  try { await migrateLegacy(); } catch (_) {}
+  try { records = (await Store.all()) || []; } catch (_) { records = []; }
+  try { settings = { ...DEFAULT_SETTINGS, ...sanitizeSettings((await Store.get('settings')) || {}) }; } catch (_) {}
+  $('appIcon').src = APP_ICON_WIDE;
+  $('topLogo').src = settings.logo || BUILTIN_LOGO; $('topLogo').hidden = !settings.logo;
+  $('topDistrict').textContent = settings.district;
+  applyCredit();
+  refreshDatalists();
+  await newBadge(true);
+  updateStorage();
+  if (document.fonts) document.fonts.ready.then(() => renderPreview());
+  window.__badgesReady = true;
+}
+// test hooks
+window.__badges = { code128Codes, code128Svg, C128, parseCsv, toIsoDate, get records() { return records; }, get settings() { return settings; }, doPrint };
+init();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+﻿NAFTAL Badges — Aymen
+=====================
+
+Installation sur un nouvel ordinateur
+1. Copiez tout ce dossier (clé USB, etc.).
+2. Double-cliquez sur « Installer.bat ».
+   -> l'outil est copié sur l'ordinateur et un raccourci « NAFTAL Badges »
+      avec l'icône apparaît sur le Bureau.
+3. Ouvrez l'outil, puis « Importer… » et choisissez votre fichier .json
+   pour retrouver vos badges.
+
+Sauvegarde : dans l'outil, exportez régulièrement en JSON et mettez le
+fichier dans ce dossier.
+
+-----------------------------------------------------------------
+التثبيت على حاسوب جديد
+1. انسخ هذا المجلد كاملاً (مفتاح USB مثلاً).
+2. اضغط مرتين على « Installer.bat »
+   ← تُنسخ الأداة إلى الحاسوب ويظهر اختصار « NAFTAL Badges » بالأيقونة على سطح المكتب.
+3. افتح الأداة ثم « Importer… » واختر ملف ‎.json لاسترجاع البادجات.
+
+النسخ الاحتياطي: صدّر البادجات بصيغة JSON من حين لآخر وضع الملف في هذا المجلد.
