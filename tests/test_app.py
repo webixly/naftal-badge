@@ -19,10 +19,10 @@ img = Image.new('RGB', (600, 800), '#7a9cc6'); d = ImageDraw.Draw(img)
 d.ellipse((200, 150, 400, 380), fill='#e8c3a0'); d.rectangle((150, 420, 450, 800), fill='#203050')
 photo_path = OUT / 'photo.jpg'; img.save(photo_path)
 csv_path = OUT / 'import.csv'
-csv_path.write_text('﻿Matricule;Nom;Prénom;Fonction;Structure;Affectation;Type;Valide au\n'
-                    '20001;BENALI;Karim;Chef de service;Direction Finances;Siège;Carte Professionnelle;31/12/2027\n'
-                    '20002;"SAÏDI; KHELIL";Amina;Stagiaire;Département Informatique;Dépôt Caroubier;Carte Stagiaire;01/01/2020\n'
-                    ';SANSMAT;X;;;;;\n', encoding='utf-8')
+csv_path.write_text('﻿Matricule;Nom;Prénom;Fonction;Structure;Affectation;Type;Valide au;Groupe sanguin\n'
+                    '20001;BENALI;Karim;Chef de service;Direction Finances;Siège;Carte Professionnelle;31/12/2027;0 +\n'
+                    '20002;"SAÏDI; KHELIL";Amina;Stagiaire;Département Informatique;Dépôt Caroubier;Carte Stagiaire;01/01/2020;ab neg\n'
+                    ';SANSMAT;X;;;;;;\n', encoding='utf-8')
 
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=True)
@@ -79,6 +79,14 @@ with sync_playwright() as p:
     check('live: nom on card (uppercase via CSS)', page.inner_text('#previewCard .r1 .v').strip().upper() == 'MANSOURI')
     check('live: barcode number', page.inner_text('#previewCard .c-barnum') == '12345')
     check('live: invalid flags cleared', page.locator('.f.invalid').count() == 0)
+    check('blood: nothing on card when not set', page.locator('#previewCard .c-blood').count() == 0)
+    page.select_option('#fGroupe', 'AB-'); page.wait_for_timeout(100)
+    check('blood: shown on card (true minus sign)', page.inner_text('#previewCard .c-blood').strip() == 'AB\u2212')
+    page.select_option('#fGroupe', 'O+'); page.wait_for_timeout(100)
+    geo = page.evaluate("""(()=>{const r=s=>document.querySelector('#previewCard '+s).getBoundingClientRect(); const b=r('.c-blood'), bar=r('.c-bar'), band=r('.c-siege'), c=r('');
+      return [b.left>=bar.right, b.right<=band.left, b.bottom<=c.bottom]})()""")
+    check('blood: between barcode and blue band, inside card', all(geo), str(geo))
+    check('blood: normalisation', page.evaluate("['o +','0+','AB pos','b\u2212','a neg','X+',''].map(window.__badges.normBlood)") == ['O+', 'O+', 'AB+', 'B-', 'A-', '', ''])
     dims = page.evaluate("(()=>{const i=document.querySelector('#previewCard .c-photo img'); return [i.naturalWidth,i.naturalHeight]})()")
     check('photo: cropped to 22.7x26 ratio', abs(dims[0] / dims[1] - 22.7 / 26) < 0.01, str(dims))
     check('photo: remove button visible after upload', page.is_visible('#btnRemovePhoto'))
@@ -97,6 +105,7 @@ with sync_playwright() as p:
     check('persist: record survives reload', page.locator('.row').count() == 1)
     check('persist: next serial is 0002', page.input_value('#fSerial').endswith('-0002'))
     check('persist: photo kept', page.locator('.row img').count() == 1)
+    check('persist: blood group saved', page.evaluate('window.__badges.records[0].groupe') == 'O+')
 
     # 7. duplicate matricule warning
     page.fill('#fNom', 'Test'); page.fill('#fMatricule', '12345'); page.click('#btnSave')
@@ -144,6 +153,7 @@ with sync_playwright() as p:
     # 12. duplicate as template (double-click)
     page.locator('.row').filter(has_text='MANSOURI').dblclick(); page.wait_for_timeout(200)
     check('template: name cleared, structure kept', page.input_value('#fNom') == '' and page.input_value('#fStructure') == 'Département Informatique')
+    check('template: blood group cleared (personal data)', page.input_value('#fGroupe') == '')
     page.click('#btnNew'); page.wait_for_timeout(150)
 
     # 13. CSV import
@@ -153,6 +163,8 @@ with sync_playwright() as p:
     check('csv import: 2 valid rows added, 1 skipped', len(recs) == 4 and 'SAÏDI; KHELIL' in names, str(names))
     saidi = next(r for r in recs if r['nom'].startswith('SAÏDI'))
     check('csv import: date dd/mm/yyyy converted', saidi['valide'] == '2020-01-01' and saidi['type'] == 'Carte Stagiaire')
+    benali = next(r for r in recs if r['nom'] == 'BENALI')
+    check('csv import: blood group column normalised', benali['groupe'] == 'O+' and saidi['groupe'] == 'AB-', f"{benali.get('groupe')} {saidi.get('groupe')}")
     check('csv import: unique serials', len({r['serial'] for r in recs}) == 4, str([r['serial'] for r in recs]))
     page.set_input_files('#fileImport', str(csv_path)); page.wait_for_timeout(400)
     check('csv re-import: duplicates ignored', page.evaluate('window.__badges.records.length') == 4)
@@ -167,6 +179,8 @@ with sync_playwright() as p:
     cpath = OUT / 'export.csv'; dl.value.save_as(cpath)
     lines = cpath.read_text(encoding='utf-8-sig').strip().splitlines()
     check('export csv: header + 4 rows, BOM for Excel', len(lines) == 5 and lines[0].startswith('Matricule;'), str(len(lines)))
+    check('export csv: blood group column', 'Groupe sanguin' in lines[0] and any(';O+;' in l for l in lines[1:]), lines[0])
+    check('export json: blood group kept', any(b.get('groupe') == 'O+' for b in data['badges']))
 
     # 15. settings
     page.fill('#sDistrict', 'District Commercialisation Blida')

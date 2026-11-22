@@ -324,6 +324,9 @@ dialog::backdrop { background: rgba(12,26,51,.55); }
 .c-bar { position: absolute; top: 42.3mm; height: 6.2mm; }
 .c-bar svg { width: 100%; height: 100%; display: block; }
 .c-barnum { position: absolute; top: 49.1mm; height: 3.6mm; line-height: 3.6mm; text-align: center; font-weight: 900; font-size: 9.4pt; color: #000; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.c-blood { position: absolute; top: 42.3mm; height: 8.8mm; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .35mm; color: #C8102E; }
+.c-blood svg { width: 3.1mm; height: 3.9mm; display: block; flex-shrink: 0; }
+.c-blood span { display: block; width: 100%; text-align: center; white-space: nowrap; overflow: hidden; font-family: 'Roboto Condensed', 'Arial Narrow', Arial, sans-serif; font-weight: 700; font-size: 10.5pt; line-height: 1.05; }
 .c-siege { position: absolute; right: 0; top: 43.8mm; min-width: 19.8mm; max-width: 34mm; height: 5.6mm; background: #1B2E56; clip-path: polygon(9% 0, 100% 0, 100% 100%, 0 100%); color: #F7D117; font-weight: 900; text-align: right; line-height: 5.6mm; padding: 0 2.4mm 0 2.6mm; white-space: nowrap; overflow: hidden; }
 /* ── Verso (back) ── */
 .card.back { font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; color: #111; }
@@ -488,6 +491,17 @@ dialog::backdrop { background: rgba(12,26,51,.55); }
         <div class="pair">
           <div class="f" id="gNom"><label for="fNom">Nom <span class="req" aria-hidden="true">*</span></label><input type="text" id="fNom" placeholder="MANSOURI" required><div class="err">Saisissez le nom.</div></div>
           <div class="f"><label for="fPrenom">Prénom</label><input type="text" id="fPrenom" placeholder="Yacine"></div>
+        </div>
+        <div class="f">
+          <label for="fGroupe">Groupe sanguin</label>
+          <select id="fGroupe">
+            <option value="">Non renseigné</option>
+            <option value="A+">A+</option><option value="A-">A−</option>
+            <option value="B+">B+</option><option value="B-">B−</option>
+            <option value="AB+">AB+</option><option value="AB-">AB−</option>
+            <option value="O+">O+</option><option value="O-">O−</option>
+          </select>
+          <div class="help">Affiché en rouge à côté du code-barres. Laissez « Non renseigné » pour ne rien imprimer.</div>
         </div>
       </fieldset>
 
@@ -809,6 +823,12 @@ async function peekSerial() {
 }
 
 /* ══════════ Badge rendering ══════════ */
+// "o +", "0+", "AB pos", "b−" -> canonical "O+", "AB+", "B-" ; anything else -> ''
+function normBlood(v) {
+  let t = String(v || '').toUpperCase().replace(/\s+/g, '').replace(/0/g, 'O').replace(/[−–]/g, '-')
+    .replace(/POS(ITIF)?$/, '+').replace(/NEG(ATIF)?$/, '-');
+  return /^(A|B|AB|O)[+-]$/.test(t) ? t : '';
+}
 function buildCard(rec, opts = {}) {
   const s = settings;
   const card = document.createElement('div');
@@ -819,6 +839,9 @@ function buildCard(rec, opts = {}) {
   // module width 0.25 mm, clamped so the barcode stays inside its zone
   const bw = Math.max(14, Math.min(30, bc.modules * 0.25));
   const bLeft = 29.1;
+  const blood = normBlood(rec.groupe);
+  // blood group: 6 mm wide, centred in the free zone after the barcode; the blue band gets the rest
+  const bEnd = bLeft + bw, bzL = Math.max(bEnd + 1, (bEnd + 64.4) / 2 - 3), bzR = bzL + 6, bandMax = 85.6 - bzR - 0.4;
   const placeholder = opts.placeholder;
   const val = (v, ph) => esc(v || (placeholder ? ph : ''));
   card.innerHTML = `
@@ -836,7 +859,8 @@ function buildCard(rec, opts = {}) {
     <div class="c-mat">Matricule</div>
     <div class="c-bar" style="left:${bLeft}mm;width:${bw}mm">${bc.svg}</div>
     <div class="c-barnum" style="left:${bLeft - 4}mm;width:${bw + 8}mm" data-fit="9.4,6">${esc(code)}</div>
-    <div class="c-siege" data-field="fAffect" data-fit="12.6,7">${esc(rec.affectation || 'Siège')}</div>`;
+    ${blood ? `<div class="c-blood" style="left:${bzL.toFixed(2)}mm;width:${(bzR - bzL).toFixed(2)}mm" title="Groupe sanguin"><svg viewBox="0 0 24 30" aria-hidden="true"><path fill="currentColor" d="M12 0C12 0 0 13.6 0 20.4A12 9.6 0 0 0 24 20.4C24 13.6 12 0 12 0Z"/><path fill="#fff" opacity=".55" d="M6.2 19.2c0-2.6 1.9-5.6 3.4-7.6.4-.5 1.1 0 .8.6-1 2-1.9 4.3-1.9 6.6 0 .9-.6 1.5-1.3 1.5-.6 0-1-.5-1-1.1Z"/></svg><span data-fit="10.5,6">${esc(blood.replace('-', '−'))}</span></div>` : ''}
+    <div class="c-siege" data-field="fAffect" data-fit="12.6,7"${blood ? ` style="max-width:${bandMax.toFixed(2)}mm;min-width:${Math.min(19.8, bandMax).toFixed(2)}mm"` : ''}>${esc(rec.affectation || 'Siège')}</div>`;
   return card;
 }
 
@@ -911,12 +935,13 @@ function layoutStage() {
 }
 
 /* ══════════ Form ══════════ */
-const FIELDS = ['fType', 'fNom', 'fPrenom', 'fFonction', 'fStructure', 'fAffect', 'fValide', 'fMatricule'];
+const FIELDS = ['fType', 'fNom', 'fPrenom', 'fGroupe', 'fFonction', 'fStructure', 'fAffect', 'fValide', 'fMatricule'];
 function readForm() {
   return {
     type: $('fType').value,
     nom: $('fNom').value.trim(),
     prenom: $('fPrenom').value.trim(),
+    groupe: $('fGroupe').value,
     fonction: $('fFonction').value.trim(),
     structure: $('fStructure').value.trim(),
     affectation: $('fAffect').value.trim() || 'Siège',
@@ -934,6 +959,7 @@ function writeForm(rec) {
   if (!$('fType').value) $('fType').selectedIndex = 0;
   $('fNom').value = rec.nom || '';
   $('fPrenom').value = rec.prenom || '';
+  $('fGroupe').value = normBlood(rec.groupe);
   $('fFonction').value = rec.fonction || '';
   $('fStructure').value = rec.structure || '';
   $('fAffect').value = rec.affectation || 'Siège';
@@ -1005,7 +1031,7 @@ async function duplicateAsTemplate(id) {
   if (!rec) return;
   currentId = null;
   const s = await peekSerial();
-  writeForm({ ...rec, nom: '', prenom: '', matricule: '', photo: '', serial: s.text });
+  writeForm({ ...rec, nom: '', prenom: '', groupe: '', matricule: '', photo: '', serial: s.text });
   baseline = snapshot();
   renderPreview(); renderList();
   $('fNom').focus();
@@ -1272,13 +1298,13 @@ function exportJson() {
   toast(`Sauvegarde de ${plural(records.length, 'badge', 'badges')} téléchargée.`);
 }
 
-const CSV_COLS = [['matricule', 'Matricule'], ['nom', 'Nom'], ['prenom', 'Prénom'], ['fonction', 'Fonction'], ['structure', 'Structure'], ['affectation', 'Affectation'], ['type', 'Type'], ['valide', 'Valide au'], ['serial', 'N° de série']];
+const CSV_COLS = [['matricule', 'Matricule'], ['nom', 'Nom'], ['prenom', 'Prénom'], ['fonction', 'Fonction'], ['structure', 'Structure'], ['affectation', 'Affectation'], ['type', 'Type'], ['valide', 'Valide au'], ['groupe', 'Groupe sanguin'], ['serial', 'N° de série']];
 const csvCell = (v) => { v = String(v ?? ''); return /[";\n\r]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v; };
 function exportCsv(model = false) {
   if (!model && !records.length) { toast('Le registre est vide : rien à exporter.', { error: true }); return; }
-  const head = (model ? CSV_COLS.slice(0, 8) : CSV_COLS).map(c => c[1]).join(';');
+  const head = (model ? CSV_COLS.slice(0, 9) : CSV_COLS).map(c => c[1]).join(';');
   const lines = model
-    ? ['12345;MANSOURI;Yacine;Ingénieur;Département Informatique;Siège;Carte Professionnelle;31/12/2027']
+    ? ['12345;MANSOURI;Yacine;Ingénieur;Département Informatique;Siège;Carte Professionnelle;31/12/2027;O+']
     : records.map(r => CSV_COLS.map(([k]) => csvCell(k === 'valide' ? fmtDate(r.valide) : r[k])).join(';'));
   download(model ? 'modele_import_badges.csv' : `naftal_badges_${isoDate(new Date())}.csv`, '﻿' + [head, ...lines].join('\r\n'), 'text/csv;charset=utf-8');
   if (!model) toast(`Liste de ${plural(records.length, 'badge', 'badges')} exportée.`);
@@ -1311,7 +1337,7 @@ function toIsoDate(s) {
   if (m) { const y = m[3].length === 2 ? '20' + m[3] : m[3]; return `${y}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`; }
   return '';
 }
-const HEADER_MAP = { matricule: 'matricule', mat: 'matricule', nom: 'nom', prenom: 'prenom', fonction: 'fonction', poste: 'fonction', structure: 'structure', service: 'structure', departement: 'structure', affectation: 'affectation', lieu: 'affectation', siege: 'affectation', type: 'type', 'type de carte': 'type', 'valide au': 'valide', valide: 'valide', validite: 'valide', expiration: 'valide', 'date de validite': 'valide' };
+const HEADER_MAP = { matricule: 'matricule', mat: 'matricule', nom: 'nom', prenom: 'prenom', fonction: 'fonction', poste: 'fonction', structure: 'structure', service: 'structure', departement: 'structure', affectation: 'affectation', lieu: 'affectation', siege: 'affectation', type: 'type', 'type de carte': 'type', 'valide au': 'valide', valide: 'valide', validite: 'valide', expiration: 'valide', 'date de validite': 'valide', 'groupe sanguin': 'groupe', groupe: 'groupe', 'gr sanguin': 'groupe', gs: 'groupe', sang: 'groupe', groupage: 'groupe', 'blood group': 'groupe', blood: 'groupe' };
 
 async function importFile(file) {
   if (!file) return;
@@ -1358,6 +1384,7 @@ async function importFile(file) {
       fonction: String(it.fonction || ''), structure: String(it.structure || ''),
       affectation: String(it.affectation || 'Siège'),
       valide: toIsoDate(it.valide),
+      groupe: normBlood(it.groupe),
       matricule: String(it.matricule).trim(),
       seq: hasSerial ? Number(it.seq) : seq,
       serial: hasSerial ? String(it.serial) : `${year}-${String(seq).padStart(4, '0')}`,
@@ -1633,7 +1660,7 @@ async function init() {
   window.__badgesReady = true;
 }
 // test hooks
-window.__badges = { code128Codes, code128Svg, C128, parseCsv, toIsoDate, get records() { return records; }, get settings() { return settings; }, doPrint };
+window.__badges = { normBlood, code128Codes, code128Svg, C128, parseCsv, toIsoDate, get records() { return records; }, get settings() { return settings; }, doPrint };
 init();
 })();
 </script>

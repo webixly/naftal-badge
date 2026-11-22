@@ -5,11 +5,12 @@
 <p align="center">Générateur de cartes professionnelles (badges CR80) pour le District Commercialisation NAFTAL.<br>
 Un seul fichier HTML, sans serveur, sans installation, fonctionne hors ligne.</p>
 
-<p align="center"><img src="docs/apercu-app.png" alt="Aperçu de l'application" width="900"></p>
+<p align="center"><img src="docs/apercu.png" alt="Aperçu de l'application" width="900"></p>
 
 ## Fonctionnalités
 
 - **Badge CR80** (85,6 × 53,98 mm) fidèle au modèle officiel : logo, bandeau, photo, champs, code-barres Code 128 du matricule, bandeau d'affectation.
+- **Groupe sanguin** (facultatif) imprimé en rouge avec une goutte, entre le code-barres et le bandeau d'affectation.
 - **Verso** (« IMPORTANT ») modifiable dans les paramètres, avec aperçu animé recto/verso (retournement 3D).
 - **Registre** enregistré dans le navigateur (IndexedDB) : recherche par nom, matricule, structure ou n° de série ; filtres *Valides / Bientôt / Expirés*.
 - **Photo** : glisser-déposer, coller (Ctrl+V) ou parcourir, recadrage automatique au format 22,7 × 26 mm.
@@ -52,7 +53,7 @@ docs/                  captures d'écran
 ```bash
 python src/build.py          # régénère naftal-badges.html
 pip install playwright pypdf && python -m playwright install chromium
-python tests/test_app.py     # 93 vérifications (rendu, code-barres, stockage, import/export, impression PDF…)
+python tests/test_app.py     # 102 vérifications (rendu, code-barres, stockage, import/export, impression PDF…)
 ```
 
 ## Auteur
