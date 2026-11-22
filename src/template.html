@@ -324,9 +324,9 @@ dialog::backdrop { background: rgba(12,26,51,.55); }
 .c-bar { position: absolute; top: 42.3mm; height: 6.2mm; }
 .c-bar svg { width: 100%; height: 100%; display: block; }
 .c-barnum { position: absolute; top: 49.1mm; height: 3.6mm; line-height: 3.6mm; text-align: center; font-weight: 900; font-size: 9.4pt; color: #000; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.c-blood { position: absolute; top: 42.3mm; height: 8.8mm; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .35mm; color: #C8102E; }
-.c-blood svg { width: 3.1mm; height: 3.9mm; display: block; flex-shrink: 0; }
-.c-blood span { display: block; width: 100%; text-align: center; white-space: nowrap; overflow: hidden; font-family: 'Roboto Condensed', 'Arial Narrow', Arial, sans-serif; font-weight: 700; font-size: 10.5pt; line-height: 1.05; }
+.c-blood { position: absolute; top: 42.3mm; height: 6.2mm; line-height: 6.2mm; color: #111; white-space: nowrap; font-size: 10.6pt; }
+.c-blood b { font-weight: 700; color: #000; }
+.c-blood.stack { height: 8.8mm; line-height: 1.1; display: flex; flex-direction: column; justify-content: center; align-items: center; }
 .c-siege { position: absolute; right: 0; top: 43.8mm; min-width: 19.8mm; max-width: 34mm; height: 5.6mm; background: #1B2E56; clip-path: polygon(9% 0, 100% 0, 100% 100%, 0 100%); color: #F7D117; font-weight: 900; text-align: right; line-height: 5.6mm; padding: 0 2.4mm 0 2.6mm; white-space: nowrap; overflow: hidden; }
 /* ── Verso (back) ── */
 .card.back { font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; color: #111; }
@@ -501,7 +501,7 @@ dialog::backdrop { background: rgba(12,26,51,.55); }
             <option value="AB+">AB+</option><option value="AB-">AB−</option>
             <option value="O+">O+</option><option value="O-">O−</option>
           </select>
-          <div class="help">Affiché en rouge à côté du code-barres. Laissez « Non renseigné » pour ne rien imprimer.</div>
+          <div class="help">Imprimé « Rh : O+ » à côté du code-barres. Laissez « Non renseigné » pour ne rien imprimer.</div>
         </div>
       </fieldset>
 
@@ -840,8 +840,7 @@ function buildCard(rec, opts = {}) {
   const bw = Math.max(14, Math.min(30, bc.modules * 0.25));
   const bLeft = 29.1;
   const blood = normBlood(rec.groupe);
-  // blood group: 6 mm wide, centred in the free zone after the barcode; the blue band gets the rest
-  const bEnd = bLeft + bw, bzL = Math.max(bEnd + 1, (bEnd + 64.4) / 2 - 3), bzR = bzL + 6, bandMax = 85.6 - bzR - 0.4;
+  const bEnd = bLeft + bw;   // "Rh : O+" starts just after the barcode; fitCard() measures it and gives the blue band the rest
   const placeholder = opts.placeholder;
   const val = (v, ph) => esc(v || (placeholder ? ph : ''));
   card.innerHTML = `
@@ -859,8 +858,8 @@ function buildCard(rec, opts = {}) {
     <div class="c-mat">Matricule</div>
     <div class="c-bar" style="left:${bLeft}mm;width:${bw}mm">${bc.svg}</div>
     <div class="c-barnum" style="left:${bLeft - 4}mm;width:${bw + 8}mm" data-fit="9.4,6">${esc(code)}</div>
-    ${blood ? `<div class="c-blood" style="left:${bzL.toFixed(2)}mm;width:${(bzR - bzL).toFixed(2)}mm" title="Groupe sanguin"><svg viewBox="0 0 24 30" aria-hidden="true"><path fill="currentColor" d="M12 0C12 0 0 13.6 0 20.4A12 9.6 0 0 0 24 20.4C24 13.6 12 0 12 0Z"/><path fill="#fff" opacity=".55" d="M6.2 19.2c0-2.6 1.9-5.6 3.4-7.6.4-.5 1.1 0 .8.6-1 2-1.9 4.3-1.9 6.6 0 .9-.6 1.5-1.3 1.5-.6 0-1-.5-1-1.1Z"/></svg><span data-fit="10.5,6">${esc(blood.replace('-', '−'))}</span></div>` : ''}
-    <div class="c-siege" data-field="fAffect" data-fit="12.6,7"${blood ? ` style="max-width:${bandMax.toFixed(2)}mm;min-width:${Math.min(19.8, bandMax).toFixed(2)}mm"` : ''}>${esc(rec.affectation || 'Siège')}</div>`;
+    ${blood ? `<div class="c-blood" style="left:${(bEnd + 2).toFixed(2)}mm" data-blood="${esc(blood.replace('-', '−'))}">Rh : <b>${esc(blood.replace('-', '−'))}</b></div>` : ''}
+    <div class="c-siege" data-field="fAffect" data-fit="12.6,7">${esc(rec.affectation || 'Siège')}</div>`;
   return card;
 }
 
@@ -878,18 +877,38 @@ function buildBack(opts = {}) {
 }
 
 // Shrink text until it fits its box (must be attached to the DOM)
-function fitCard(card) {
-  card.querySelectorAll('[data-fit]').forEach(el => {
-    const [max, min] = el.dataset.fit.split(',').map(Number);
-    let size = max;
+function fitEl(el) {
+  const [max, min] = el.dataset.fit.split(',').map(Number);
+  let size = max;
+  el.style.fontSize = size + 'pt';
+  el.style.textOverflow = '';
+  while (el.scrollWidth > el.clientWidth + 0.5 && size > min) {
+    size = Math.round((size - 0.2) * 10) / 10;
     el.style.fontSize = size + 'pt';
-    el.style.textOverflow = '';
-    while (el.scrollWidth > el.clientWidth + 0.5 && size > min) {
-      size = Math.round((size - 0.2) * 10) / 10;
-      el.style.fontSize = size + 'pt';
-    }
-    if (el.scrollWidth > el.clientWidth + 0.5) el.style.textOverflow = 'ellipsis';
-  });
+  }
+  if (el.scrollWidth > el.clientWidth + 0.5) el.style.textOverflow = 'ellipsis';
+}
+function fitCard(card) {
+  fitBlood(card, false);
+  card.querySelectorAll('[data-fit]').forEach(fitEl);
+  // the affectation text has priority: if it is cut, put "Rh" on two lines to free some width
+  const band = card.querySelector('.c-siege');
+  if (band && band.style.textOverflow === 'ellipsis' && card.querySelector('.c-blood:not(.stack)')) { fitBlood(card, true); fitEl(band); }
+}
+
+// "Rh : O+" sits right after the barcode: measure it, then cap the blue band so they never touch.
+// Falls back to two lines ("Rh :" over "O+") only when the band would get too narrow.
+function fitBlood(card, forceStack) {
+  const bl = card.querySelector('.c-blood'), band = card.querySelector('.c-siege');
+  if (!bl || !band || !card.offsetWidth) return;
+  const mm = card.offsetWidth / 85.6;
+  const bandRoom = () => card.offsetWidth - (bl.offsetLeft + bl.offsetWidth) - 1.2 * mm;
+  bl.classList.remove('stack');
+  bl.innerHTML = `Rh : <b>${bl.dataset.blood}</b>`;
+  if (forceStack || bandRoom() < 15 * mm) { bl.classList.add('stack'); bl.innerHTML = `<span>Rh :</span><b>${bl.dataset.blood}</b>`; }
+  const room = bandRoom();
+  band.style.maxWidth = room + 'px';
+  band.style.minWidth = Math.min(19.8 * mm, room) + 'px';
 }
 
 // Flag form fields whose text is cut on the card
