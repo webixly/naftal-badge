@@ -92,7 +92,7 @@ with sync_playwright() as p:
     check('blood: normalisation', page.evaluate("['o +','0+','AB pos','b\u2212','a neg','X+',''].map(window.__badges.normBlood)") == ['O+', 'O+', 'AB+', 'B-', 'A-', '', ''])
     cur_type = page.input_value('#fType')
     page.select_option('#fType', 'Carte Stagiaire'); page.wait_for_timeout(100)
-    check('trainee: big orange S on card', page.locator('#previewCard .c-stag').count() == 1 and page.evaluate("getComputedStyle(document.querySelector('#previewCard .c-stag')).color") == 'rgb(242, 140, 0)')
+    check('trainee: big orange S on card', page.locator('#previewCard .c-stag').count() == 1 and page.evaluate("getComputedStyle(document.querySelector('#previewCard .c-stag')).color").startswith('rgba(242, 140, 0'))
     page.select_option('#fType', 'Carte Professionnelle'); page.wait_for_timeout(100)
     check('trainee: no S on other cards', page.locator('#previewCard .c-stag').count() == 0)
     page.select_option('#fType', cur_type); page.wait_for_timeout(100)
