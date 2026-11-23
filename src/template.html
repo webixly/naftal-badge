@@ -311,6 +311,8 @@ dialog::backdrop { background: rgba(12,26,51,.55); }
 .c-banner { position: absolute; left: 1.2mm; top: 12.3mm; width: 59.6mm; height: 5.9mm; background: #F7D117; text-align: center; line-height: 5.9mm; font-family: 'Roboto Condensed', 'Arial Narrow', Arial, sans-serif; font-weight: 700; color: #4A4A48; white-space: nowrap; overflow: hidden; padding: 0 1.5mm; }
 .c-photo { position: absolute; left: 61.8mm; top: 12.2mm; width: 22.7mm; height: 26mm; border: .4mm solid #B3B3B3; background: #fff; overflow: hidden; }
 .c-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* trainee card: big orange "S" behind the text */
+.c-stag { position: absolute; left: 22mm; top: 10.5mm; width: 38mm; height: 43mm; line-height: 43mm; text-align: center; font-family: 'Arial Black', Arial, sans-serif; font-weight: 900; font-size: 150pt; color: #F28C00; opacity: .22; pointer-events: none; user-select: none; }
 .c-wm { position: absolute; left: 18mm; top: 19mm; width: 43.6mm; height: 19.7mm; object-fit: contain; pointer-events: none; }
 .c-row { position: absolute; left: 1.5mm; width: 59.4mm; display: flex; align-items: center; white-space: nowrap; }
 .c-row .l { width: 13.6mm; flex-shrink: 0; display: flex; justify-content: space-between; font-weight: 400; color: #111; }
@@ -847,6 +849,7 @@ function buildCard(rec, opts = {}) {
     <div class="c-logo"><img src="${s.logo || BUILTIN_LOGO}" alt=""></div>
     <div class="c-district" data-fit="15,7">${esc(s.district)}</div>
     <div class="c-banner" data-fit="15,7">${esc(rec.type || 'Carte Professionnelle')}</div>
+    ${/stagiaire/i.test(rec.type || '') ? '<div class="c-stag" aria-hidden="true">S</div>' : ''}
     ${s.watermark ? `<img class="c-wm" src="${WATERMARK}" alt="" style="opacity:${(s.wmOpacity || 16) / 100}">` : ''}
     <div class="c-photo">${rec.photo ? `<img src="${rec.photo}" alt="">` : ''}</div>
     ${s.showSerial && rec.serial ? `<div class="c-serial">N° ${esc(rec.serial)}</div>` : ''}
